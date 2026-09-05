@@ -285,8 +285,10 @@
     <script>
         const ADMIN_PASSWORD = "1234";
 
-        // قاعدة البيانات
-        let staffData = [
+        // =============================================
+        // البيانات الأولية (سوف تُحفظ لأول مرة فقط)
+        // =============================================
+        const defaultStaffData = [
           { id: 1, code: "3470613", nationalId: "30009281800215", name: "ابراهيم عبد الرازق عبد الونيس منبي خليف", phone: "-", subject: "كيمياء", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
           { id: 2, code: "478529", nationalId: "27905281801419", name: "احمد ايوب محمود الحناوي", phone: "-", subject: "الفلسفة والمنطق", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
           { id: 3, code: "2489162", nationalId: "28310201803351", name: "أحمد شحاته محمود يوسف", phone: "-", subject: "فيزياء", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
@@ -358,6 +360,27 @@
           { id: 69, code: "2662532", nationalId: "28310181801969", name: "يسرا محمد عبد الله متولى ابويوسف", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" }
         ];
 
+        // =============================================
+        // تحميل البيانات المحفوظة أو استخدام الافتراضي
+        // =============================================
+        function loadData() {
+            const savedData = localStorage.getItem('staffData');
+            if (savedData) {
+                return JSON.parse(savedData);
+            } else {
+                // حفظ البيانات الافتراضية لأول مرة
+                localStorage.setItem('staffData', JSON.stringify(defaultStaffData));
+                return [...defaultStaffData];
+            }
+        }
+
+        // حفظ البيانات في LocalStorage
+        function saveDataToStorage() {
+            localStorage.setItem('staffData', JSON.stringify(staffData));
+        }
+
+        // تهيئة المتغير بالبيانات المحملة
+        let staffData = loadData();
         let isAuthenticated = false;
 
         // دالة حساب السن واستخراج النوع تلقائياً من الرقم القومي
@@ -416,14 +439,13 @@
             document.getElementById('editMonthlyQuota').value = weekly * 4;
         }
 
-        // تحديث كروت الإحصائيات (تتضمن حساب الذكور والإناث للمتواجدين فعلياً)
+        // تحديث كروت الإحصائيات
         function updateStats() {
             const activeStaff = staffData.filter(item => item.status === "أصلي" || item.status === "منتدب من");
             const excludedStaff = staffData.filter(item => item.status === "منتدب إلى" || item.status === "إجازة");
 
             document.getElementById('statActiveTotal').textContent = activeStaff.length;
 
-            // حساب الذكور والإناث للمتواجدين فعلياً
             let maleCount = 0;
             let femaleCount = 0;
 
@@ -635,6 +657,9 @@
                 }
             }
 
+            // حفظ البيانات في LocalStorage
+            saveDataToStorage();
+
             closeModal();
             initSubjectFilter();
             filterData();
@@ -644,6 +669,8 @@
             if (!checkAuth()) return;
             if (confirm("هل أنت تأكد من رغبتك في حذف هذا السجل؟")) {
                 staffData = staffData.filter(item => item.id !== id);
+                // حفظ البيانات في LocalStorage
+                saveDataToStorage();
                 initSubjectFilter();
                 filterData();
             }
@@ -690,4 +717,3 @@
     </script>
 </body>
 </html>
-
