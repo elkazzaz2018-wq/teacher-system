@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة بيانات المعلمين والموظفين المطور</title>
+    <title>نظام إدارة بيانات المعلمين والموظفين الشامل (71 موظفاً)</title>
     <!-- مكتبة تصدير Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); min-height: 100vh; padding: 20px; color: #333; }
-        .container { max-width: 1600px; margin: 0 auto; }
+        .container { max-width: 1650px; margin: 0 auto; }
         .navbar { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 15px; padding: 15px 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .navbar-brand { font-size: 1.4rem; font-weight: bold; color: #182848; }
         .navbar-nav { display: flex; gap: 10px; list-style: none; flex-wrap: wrap; }
@@ -64,7 +64,7 @@
 <body>
     <div class="container">
         <nav class="navbar">
-            <div class="navbar-brand">🔒 نظام إدارة الموظفين والمعلمين الشامل</div>
+            <div class="navbar-brand">🔒 نظام إدارة بيانات جميع المعلمين والموظفين (71)</div>
             <ul class="navbar-nav">
                 <li><a class="nav-link active" onclick="showSection('dashboard')">الرئيسية</a></li>
                 <li><a class="nav-link" onclick="showSection('employees')">سجل الموظفين والمعلمين</a></li>
@@ -85,7 +85,7 @@
                 <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
                     <button class="btn btn-success" onclick="protectedAction(() => showAddModal())">➕ إضافة موظف جديد</button>
                     <button class="btn btn-excel" onclick="exportToExcel(false)">📊 تصدير السجل الكامل Excel</button>
-                    <button class="btn btn-danger" onclick="protectedAction(() => resetToDefaultData())">🔄 استعادة البيانات الأصلية</button>
+                    <button class="btn btn-danger" onclick="protectedAction(() => resetToDefaultData())">🔄 استعادة البيانات الأصلية (71 معلم)</button>
                 </div>
             </div>
         </div>
@@ -212,8 +212,7 @@
     </div>
 
     <script>
-        // كلمة السر لحماية العمليات
-        const SYSTEM_PASSWORD = "260";
+        const SYSTEM_PASSWORD = "2608";
 
         const initialEmployees = [
             {id:1, nationalId:"28501011800111", name:"إبراهيم عبد الرازق عبد الوحيد", job:"معلم بالحصة", currentJobDate:"2022-10-01", subject:"كيمياء", phone:"01012345671", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس علوم وتربية", hireDate:"2022-10-01", covered:false},
@@ -221,10 +220,75 @@
             {id:3, nationalId:"28109201800333", name:"أحمد شحاتة محمود يوسف", job:"معلم أول", currentJobDate:"2019-01-01", subject:"فيزياء", phone:"01212345673", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس علوم وتربية", hireDate:"2010-09-01", covered:true},
             {id:4, nationalId:"29203151800444", name:"أحمد عبدالستار عبدالسلام الشريف", job:"معلم بالحصة", currentJobDate:"2023-10-15", subject:"لغة عربية ودين", phone:"01098765432", address:"البحيرة - دمنهور", qualification:"ليسانس دار العلوم", hireDate:"2023-10-15", covered:false},
             {id:5, nationalId:"27201011800555", name:"أحمد متولى محمد خاطر", job:"معلم خبير", currentJobDate:"2015-11-01", subject:"لغة عربية ودين", phone:"01512345675", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1998-09-01", covered:true},
-            {id:51, nationalId:"28505051805151", name:"محمد عبدالوهاب عبدالجليل القزاز", job:"أخصائي نفسي", currentJobDate:"2016-09-01", subject:"إرشاد نفسي", phone:"01000000000", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية قسم إرشاد نفسي", hireDate:"2012-10-01", covered:true}
+            {id:6, nationalId:"28311051800666", name:"أحمد محمد محمد على", job:"معلم أول", currentJobDate:"2017-03-01", subject:"فلسفة ومنطق", phone:"01011223344", address:"البحيرة - كفر الدوار", qualification:"ليسانس تربية", hireDate:"2009-03-01", covered:true},
+            {id:7, nationalId:"27504101800777", name:"اسامه ابراهيم عبد الحسيب عبد الحميد", job:"معلم خبير", currentJobDate:"2016-09-01", subject:"لغة فرنسية", phone:"01122334455", address:"البحيرة - دمنهور", qualification:"ليسانس ألسن وتربية", hireDate:"2000-10-01", covered:true},
+            {id:8, nationalId:"28208121800888", name:"اسامه النوبى عبدالرازق عبدالحليم", job:"معلم أول", currentJobDate:"2018-09-01", subject:"لغة إنجليزية", phone:"01233445566", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"2008-09-01", covered:true},
+            {id:9, nationalId:"28002021800999", name:"السيد عبدربه محمود محمد", job:"معلم أول", currentJobDate:"2017-05-01", subject:"رياضيات", phone:"01044556677", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس تربية رياضية/علوم", hireDate:"2007-03-01", covered:true},
+            {id:10, nationalId:"28606061801010", name:"الصافى فرج ابراهيم عبدالعال", job:"أمين معمل", currentJobDate:"2012-05-01", subject:"بدون", phone:"01155667788", address:"البحيرة - معمل القزاز", qualification:"دبلوم فني", hireDate:"2012-05-01", covered:false},
+            {id:11, nationalId:"26801011801111", name:"امال احمد شوقى ابراهيم بيومى", job:"كبير معلمين", currentJobDate:"2014-09-01", subject:"حاسب آلي متفرغ", phone:"01266778899", address:"البحيرة - دمنهور", qualification:"بكالوريوس حاسبات وتربية", hireDate:"1994-09-01", covered:true},
+            {id:12, nationalId:"27303031801212", name:"ايمان سعيد على مصطفى", job:"أمين مكتبة خبير", currentJobDate:"2015-10-01", subject:"بدون", phone:"01077889900", address:"البحيرة - كفر الدوار", qualification:"ليسانس مكتبات ومعلومات", hireDate:"1997-10-01", covered:true},
+            {id:13, nationalId:"27907071801313", name:"ايمان عياد امجد بركات", job:"معلم أول أ", currentJobDate:"2019-03-01", subject:"أحياء", phone:"01188990011", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس علوم وتربية", hireDate:"2004-03-01", covered:true},
+            {id:14, nationalId:"27405051801414", name:"ايناس عبد الخالق محروس على", job:"معلم خبير", currentJobDate:"2016-09-01", subject:"اقتصاد منزلي", phone:"01299001122", address:"البحيرة - دمنهور", qualification:"بكالوريوس اقتصاد منزلي", hireDate:"1999-09-01", covered:true},
+            {id:15, nationalId:"29101011801515", name:"جهاد سعداوى سعد حسنين", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"فيزياء", phone:"01000112233", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس علوم", hireDate:"2023-10-01", covered:false},
+            {id:16, nationalId:"26902021801616", name:"حامد محمود رمضان قيقى", job:"كبير معلمين", currentJobDate:"2013-09-01", subject:"جغرافيا", phone:"01111223344", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1993-09-01", covered:true},
+            {id:17, nationalId:"26704041801717", name:"حسام الدين ابراهيم عبد اللطيف ابو الخير", job:"كبير معلمين", currentJobDate:"2012-10-01", subject:"لغة عربية ودين", phone:"01222334455", address:"البحيرة - دمنهور", qualification:"ليسانس تربية", hireDate:"1992-10-01", covered:true},
+            {id:18, nationalId:"28708081801818", name:"حسن رجب جمعه على", job:"أمين معمل", currentJobDate:"2014-01-15", subject:"بدون", phone:"01033445566", address:"البحيرة - معمل القزاز", qualification:"دبلوم فني فوق متوسط", hireDate:"2014-01-15", covered:false},
+            {id:19, nationalId:"27709091801919", name:"حسنى فؤاد محمد الششتاوى", job:"معلم أول أ", currentJobDate:"2018-09-01", subject:"حاسب آلي متفرغ", phone:"01144556677", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس نوعية", hireDate:"2003-09-01", covered:true},
+            {id:20, nationalId:"27010101802020", name:"خالد محمد محمود عبد الحميد", job:"كبير أخصائيين اجتماعيين - وكيل مدرسة", currentJobDate:"2015-09-01", subject:"بدون", phone:"01255667788", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس خدمة إجتماعية", hireDate:"1995-09-01", covered:true},
+            {id:21, nationalId:"27611111802121", name:"خيرى محمد شعبان عبدالله", job:"معلم خبير", currentJobDate:"2017-10-01", subject:"لغة إنجليزية", phone:"01066778899", address:"البحيرة - دمنهور", qualification:"ليسانس آداب وتربية", hireDate:"2001-10-01", covered:true},
+            {id:22, nationalId:"27812121802222", name:"رحاب السيد محمد اللقانى", job:"معلم أول أ", currentJobDate:"2019-09-01", subject:"مجال صناعي", phone:"01177889900", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس تربية نوعية", hireDate:"2004-09-01", covered:true},
+            {id:23, nationalId:"28301011802323", name:"رشا سعيد عبده رسلان", job:"معلم أول", currentJobDate:"2020-03-01", subject:"لغة إنجليزية", phone:"01288990011", address:"البحيرة - معمل القزاز", qualification:"ليسانس ألسن", hireDate:"2010-03-01", covered:true},
+            {id:24, nationalId:"27502021802424", name:"رشا محمد عبد الفتاح محمود صقر", job:"معلم خبير", currentJobDate:"2016-09-01", subject:"مجال زراعي", phone:"01099001122", address:"البحيرة - دمنهور", qualification:"بكالوريوس زراعة وتربية", hireDate:"2000-09-01", covered:true},
+            {id:25, nationalId:"26803031802525", name:"سامى احمد سعد محمود", job:"كبير معلمين", currentJobDate:"2013-10-01", subject:"حاسب آلي متفرغ", phone:"01100112233", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية", hireDate:"1993-10-01", covered:true},
+            {id:26, nationalId:"26904041802626", name:"سامى عبد النبى السيد بدوى", job:"كبير معلمين", currentJobDate:"2014-09-01", subject:"رياضيات", phone:"01211223344", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس علوم وتربية", hireDate:"1994-09-01", covered:true},
+            {id:27, nationalId:"27305051802727", name:"سعيد عبد اللطيف محمد سعيد", job:"معلم خبير", currentJobDate:"2015-10-01", subject:"لغة عربية ودين", phone:"01022334455", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1998-10-01", covered:true},
+            {id:28, nationalId:"28006061802828", name:"سماح ممدوح رزق حسن هيبه", job:"معلم أول أ", currentJobDate:"2020-09-01", subject:"كيمياء", phone:"01133445566", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم وتربية", hireDate:"2005-09-01", covered:true},
+            {id:29, nationalId:"28207071802929", name:"سنيه سالم على سالم", job:"معلم أول", currentJobDate:"2019-03-01", subject:"مجال صناعي", phone:"01244556677", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية نوعية", hireDate:"2009-03-01", covered:true},
+            {id:30, nationalId:"27408081803030", name:"شرين رشاد على عبد الفتاح عبد الحليم", job:"معلم خبير", currentJobDate:"2015-10-01", subject:"اقتصاد منزلي", phone:"01055667788", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس اقتصاد منزلي", hireDate:"1999-10-01", covered:true},
+            {id:31, nationalId:"28109091803131", name:"شوقى محمد محمود عامر", job:"معلم أول", currentJobDate:"2018-09-01", subject:"لغة فرنسية", phone:"01166778899", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"2008-09-01", covered:true},
+            {id:32, nationalId:"28910101803232", name:"شيماء احمد على عبدالحليم", job:"فنى رابع تعليم", currentJobDate:"2015-09-01", subject:"نشاط", phone:"01277889900", address:"البحيرة - دمنهور", qualification:"دبلوم ثانوي تجاري", hireDate:"2015-09-01", covered:false},
+            {id:33, nationalId:"28311111803333", name:"صابر شريف طاهر مصطفى", job:"معلم أول", currentJobDate:"2020-10-01", subject:"لغة عربية ودين", phone:"01088990011", address:"البحيرة - معمل القزاز", qualification:"ليسانس دار العلوم وتربية", hireDate:"2010-10-01", covered:true},
+            {id:34, nationalId:"26712121803434", name:"صالح احمد محمود دبل", job:"كبير معلمين", currentJobDate:"2011-09-01", subject:"كيمياء", phone:"01199001122", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس علوم وتربية", hireDate:"1991-09-01", covered:true},
+            {id:35, nationalId:"27701011803535", name:"صبحي رمضان معوض عبد الله", job:"معلم أول أ", currentJobDate:"2018-03-01", subject:"فلسفة ومنطق", phone:"01200112233", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"2003-03-01", covered:true},
+            {id:36, nationalId:"29302021803636", name:"عادل محسن محمد محمود صبره", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"رياضيات", phone:"01011223355", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم", hireDate:"2023-10-01", covered:false},
+            {id:37, nationalId:"27903031803737", name:"عايده جمال أمين مرعى", job:"معلم أول أ", currentJobDate:"2019-09-01", subject:"فلسفة ومنطق", phone:"01122334466", address:"البحيرة - كفر الدوار", qualification:"ليسانس تربية", hireDate:"2004-09-01", covered:true},
+            {id:38, nationalId:"27204041803838", name:"عبد المؤمن عبد اللطيف محمد سعيد", job:"معلم خبير", currentJobDate:"2013-09-01", subject:"لغة إنجليزية", phone:"01233445577", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1997-09-01", covered:true},
+            {id:39, nationalId:"28205051803939", name:"عبدالرحمن حسنين توفيق حسنين", job:"معلم أول", currentJobDate:"2019-09-01", subject:"لغة فرنسية", phone:"01044556688", address:"البحيرة - دمنهور", qualification:"ليسانس ألسن وتربية", hireDate:"2009-09-01", covered:true},
+            {id:40, nationalId:"28106061804040", name:"عبده مسعود السيد محمد", job:"معلم أول", currentJobDate:"2018-03-01", subject:"رياضيات", phone:"01155667799", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية", hireDate:"2008-03-01", covered:true},
+            {id:41, nationalId:"27007071804141", name:"علاء الدين محمد عبد الرازق رشدان", job:"كبير أخصائيين اجتماعيين", currentJobDate:"2014-10-01", subject:"بدون", phone:"01266778800", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس خدمة إجتماعية", hireDate:"1994-10-01", covered:true},
+            {id:42, nationalId:"27608081804242", name:"عماد عبدالجيد عبدالحفيظ محمد", job:"معلم أول أ - مدير مدرسة", currentJobDate:"2017-09-01", subject:"لغة عربية ودين", phone:"01077889911", address:"البحيرة - معمل القزاز", qualification:"ليسانس تربية ودبلوم إدارة", hireDate:"2002-09-01", covered:true},
+            {id:43, nationalId:"27809091804343", name:"فاطمه جمعه رزق شهاوى الديب", job:"معلم أول أ", currentJobDate:"2018-10-01", subject:"لغة إنجليزية", phone:"01188990022", address:"البحيرة - دمنهور", qualification:"ليسانس آداب وتربية", hireDate:"2003-10-01", covered:true},
+            {id:44, nationalId:"27310101804444", name:"فتحى ابراهيم السيد قادوم", job:"معلم خبير", currentJobDate:"2014-09-01", subject:"لغة إنجليزية", phone:"01299001133", address:"البحيرة - كفر الدوار", qualification:"ليسانس تربية", hireDate:"1998-09-01", covered:true},
+            {id:45, nationalId:"26911111804545", name:"ليلى محمد عبده بسيوني", job:"كبير معلمين", currentJobDate:"2013-09-01", subject:"جغرافيا", phone:"01000112244", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1993-09-01", covered:true},
+            {id:46, nationalId:"28312121804646", name:"محمد ابراهيم محمد جمعة", job:"معلم أول", currentJobDate:"2020-03-01", subject:"لغة فرنسية", phone:"01111223355", address:"البحيرة - دمنهور", qualification:"ليسانس آداب وتربية", hireDate:"2010-03-01", covered:true},
+            {id:47, nationalId:"27701011804747", name:"محمد شحاته مكرم على", job:"معلم أول أ", currentJobDate:"2018-09-01", subject:"دراسات اجتماعية", phone:"01222334466", address:"البحيرة - معمل القزاز", qualification:"ليسانس تربية", hireDate:"2003-09-01", covered:true},
+            {id:48, nationalId:"28802021804848", name:"محمد صبرى كامل مرسى غنيم", job:"معلم", currentJobDate:"2021-09-01", subject:"لغة عربية ودين", phone:"01033445577", address:"البحيرة - كفر الدوار", qualification:"ليسانس دار العلوم وتربية", hireDate:"2016-09-01", covered:true},
+            {id:49, nationalId:"27403031804949", name:"محمد عبد العزيز ابو سريع محمد", job:"معلم خبير", currentJobDate:"2015-09-01", subject:"مجال صناعي", phone:"01144556688", address:"البحيرة - دمنهور", qualification:"بكالوريوس تربية نوعية", hireDate:"1999-09-01", covered:true},
+            {id:50, nationalId:"27304041805050", name:"محمد عبد العظيم احمد السيد", job:"معلم خبير", currentJobDate:"2014-09-01", subject:"رياضيات", phone:"01255667799", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس علوم وتربية", hireDate:"1998-09-01", covered:true},
+            {id:51, nationalId:"28505051805151", name:"محمد عبدالوهاب عبدالجليل القزاز", job:"أخصائي نفسي", currentJobDate:"2016-10-01", subject:"إرشاد نفسي", phone:"01066778800", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية قسم إرشاد نفسي", hireDate:"2012-10-01", covered:true},
+            {id:52, nationalId:"29406061805252", name:"محمود احمد ابو بكر عبد العزيز", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"رياضيات", phone:"01177889911", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم", hireDate:"2023-10-01", covered:false},
+            {id:53, nationalId:"28207071805353", name:"محمود السيد محمد عبدالغنى", job:"معلم أول", currentJobDate:"2019-09-01", subject:"دراسات اجتماعية", phone:"01288990022", address:"البحيرة - كفر الدوار", qualification:"ليسانس آداب وتربية", hireDate:"2009-09-01", covered:true},
+            {id:54, nationalId:"26808081805454", name:"محمود حسن على حسن", job:"كبير معلمين", currentJobDate:"2012-09-01", subject:"لغة عربية ودين", phone:"01099001133", address:"البحيرة - معمل القزاز", qualification:"ليسانس تربية", hireDate:"1992-09-01", covered:true},
+            {id:55, nationalId:"28309091805555", name:"محمود خميس على على", job:"معلم أول", currentJobDate:"2020-03-01", subject:"رياضيات", phone:"01100112244", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم وتربية", hireDate:"2010-03-01", covered:true},
+            {id:56, nationalId:"28810101805656", name:"محمود رياض محمود مصطفى محيسن", job:"فنى ثالث", currentJobDate:"2014-05-01", subject:"بدون", phone:"01211223355", address:"البحيرة - معمل القزاز", qualification:"دبلوم فني صناعي", hireDate:"2014-05-01", covered:false},
+            {id:57, nationalId:"29311111805757", name:"محمود عادل علي بسيوني", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"لغة عربية ودين", phone:"01022334466", address:"البحيرة - كفر الدوار", qualification:"ليسانس آداب", hireDate:"2023-10-01", covered:false},
+            {id:58, nationalId:"26712121805858", name:"مدحت سعيد حسنين حجاج", job:"كبير معلمين", currentJobDate:"2011-10-01", subject:"لغة عربية ودين", phone:"01133445577", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1991-10-01", covered:true},
+            {id:59, nationalId:"27501011805959", name:"مروه محمد مصطفى عبد التواب", job:"معلم خبير", currentJobDate:"2016-09-01", subject:"تربية فنية", phone:"01244556688", address:"البحيرة - دمنهور", qualification:"بكالوريوس تربية فنية", hireDate:"2000-09-01", covered:true},
+            {id:60, nationalId:"26802021806060", name:"مصطفى محمد ابراهيم صقر", job:"كبير معلمين", currentJobDate:"2013-09-01", subject:"لغة عربية ودين", phone:"01055667799", address:"البحيرة - كفر الدوار", qualification:"ليسانس تربية", hireDate:"1993-09-01", covered:true},
+            {id:61, nationalId:"26903031806161", name:"مصطفى محمود كامل الصباغ", job:"كبير معلمين", currentJobDate:"2014-10-01", subject:"لغة عربية ودين", phone:"01166778800", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1994-10-01", covered:true},
+            {id:62, nationalId:"29504041806262", name:"منار فرج خميس فرج", job:"معلم بالحصة", currentJobDate:"2024-01-15", subject:"علوم متكاملة", phone:"01277889911", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم", hireDate:"2024-01-15", covered:false},
+            {id:63, nationalId:"28205051806363", name:"مها صالح محمد عيد صالح", job:"معلم أول", currentJobDate:"2019-09-01", subject:"فلسفة ومنطق", phone:"01088990022", address:"البحيرة - كفر الدوار", qualification:"ليسانس آداب وتربية", hireDate:"2009-09-01", covered:true},
+            {id:64, nationalId:"28006061806464", name:"مها محمد محمود القرنشاوى", job:"أخصائي اجتماعي أول", currentJobDate:"2016-03-01", subject:"بدون", phone:"01199001133", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس خدمة إجتماعية", hireDate:"2006-03-01", covered:true},
+            {id:65, nationalId:"28307071806565", name:"هبه احمد حسن رمضان", job:"معلم أول", currentJobDate:"2020-09-01", subject:"تربية فنية", phone:"01200112244", address:"البحيرة - دمنهور", qualification:"بكالوريوس تربية نوعية", hireDate:"2010-09-01", covered:true},
+            {id:66, nationalId:"27808081806666", name:"هبه احمد عبد الفتاح مصطفى التراس", job:"معلم أول أ", currentJobDate:"2019-09-01", subject:"تربية رياضية", phone:"01011223366", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية رياضية", hireDate:"2004-09-01", covered:true},
+            {id:67, nationalId:"29409091806767", name:"هدى خبيري ابراهيم ابراهيم", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"فيزياء", phone:"01122334477", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس علوم", hireDate:"2023-10-01", covered:false},
+            {id:68, nationalId:"28110101806868", name:"وائل رشاد سعيد محمد", job:"معلم أول", currentJobDate:"2018-09-01", subject:"علم نفس واجتماع", phone:"01233445588", address:"البحيرة - دمنهور", qualification:"ليسانس آداب وتربية", hireDate:"2008-09-01", covered:true},
+            {id:69, nationalId:"27511111806969", name:"وليد حسين على على زيد", job:"معلم خبير", currentJobDate:"2016-10-01", subject:"لغة فرنسية", phone:"01044556699", address:"البحيرة - معمل القزاز", qualification:"ليسانس ألسن وتربية", hireDate:"2000-10-01", covered:true},
+            {id:70, nationalId:"26712121807070", name:"ياسر زغلول السنوسى بلبع", job:"كبير معلمين", currentJobDate:"2012-09-01", subject:"تربية رياضية", phone:"01155667700", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس تربية رياضية", hireDate:"1992-09-01", covered:true},
+            {id:71, nationalId:"28201011807171", name:"يسرا محمد عبدالله متولى ابو يوسف", job:"معلم أول", currentJobDate:"2019-09-01", subject:"لغة عربية ودين", phone:"01266778811", address:"البحيرة - دمنهور", qualification:"ليسانس دار العلوم وتربية", hireDate:"2009-09-01", covered:true}
         ];
 
-        let employees = JSON.parse(localStorage.getItem('teachers_v3_protected')) || [...initialEmployees];
+        let employees = JSON.parse(localStorage.getItem('teachers_v4_71_protected')) || [...initialEmployees];
         let filteredEmployees = [...employees];
 
         function protectedAction(callback) {
@@ -239,7 +303,6 @@
         function calculateNationalIdData() {
             const nid = document.getElementById('nationalId').value.trim();
             if (nid.length === 14 && !isNaN(nid)) {
-                // تحديد القرن وتاريخ الميلاد
                 const centuryCode = parseInt(nid.substring(0, 1));
                 const yearPrefix = (centuryCode === 2) ? "19" : (centuryCode === 3) ? "20" : "";
                 if (!yearPrefix) return;
@@ -250,7 +313,6 @@
                 const birthDate = new Date(`${year}-${month}-${day}`);
 
                 if (!isNaN(birthDate.getTime())) {
-                    // حساب السن
                     const today = new Date();
                     let age = today.getFullYear() - birthDate.getFullYear();
                     const m = today.getMonth() - birthDate.getMonth();
@@ -260,7 +322,6 @@
                     document.getElementById('age').value = age + " سنة";
                 }
 
-                // تحديد النوع من الرقم 13
                 const genderDigit = parseInt(nid.substring(12, 13));
                 document.getElementById('gender').value = (genderDigit % 2 === 0) ? "أنثى" : "ذكر";
             } else {
@@ -294,7 +355,7 @@
         }
 
         function saveData() {
-            localStorage.setItem('teachers_v3_protected', JSON.stringify(employees));
+            localStorage.setItem('teachers_v4_71_protected', JSON.stringify(employees));
         }
 
         function showSection(section) {
@@ -512,13 +573,13 @@
         }
 
         function resetToDefaultData() {
-            if (confirm('هل أنت متأكد من استعادة البيانات الافتراضية؟')) {
+            if (confirm('هل أنت متأكد من استعادة البيانات الافتراضية للـ 71 معلماً وموظفاً؟')) {
                 employees = [...initialEmployees];
                 saveData();
                 updateDashboard();
                 filterEmployees();
                 populateJobFilter();
-                alert('تمت استعادة البيانات الأصلية بنجاح.');
+                alert('تمت استعادة البيانات الأصلية بالكامل بنجاح.');
             }
         }
 
