@@ -40,7 +40,6 @@
         h1 { color: var(--primary-color); text-align: center; margin-bottom: 5px; }
         p.subtitle { text-align: center; color: #64748b; margin-top: 0; margin-bottom: 20px; }
 
-        /* شريط الإحصائيات */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -58,7 +57,6 @@
         .stat-card h3 { margin: 0; font-size: 0.8rem; color: #475569; }
         .stat-card .value { font-size: 1.4rem; font-weight: bold; color: var(--primary-color); margin-top: 4px; }
 
-        /* التحكم والبحث */
         .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         input[type="text"], input[type="number"], select { padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; }
         input[type="text"] { flex: 2; min-width: 200px; }
@@ -71,24 +69,20 @@
         .btn-edit { background-color: var(--warning-color); color: white; padding: 5px 9px; font-size: 0.78rem; }
         .btn-delete { background-color: var(--danger-color); color: white; padding: 5px 9px; font-size: 0.78rem; }
 
-        /* الجدول */
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.83rem; }
         th { background-color: var(--primary-color); color: white; padding: 10px 6px; text-align: center; }
         td { padding: 8px 6px; border-bottom: 1px solid #e2e8f0; white-space: nowrap; text-align: center; }
         tr:nth-child(even) { background-color: #f8fafc; }
 
-        /* شارات */
         .badge { padding: 3px 7px; border-radius: 4px; font-weight: bold; font-size: 0.73rem; display: inline-block; }
         .badge-original { background-color: #dcfce7; color: #15803d; }
         .badge-from { background-color: #e0f2fe; color: #0369a1; }
         .badge-to { background-color: #fef3c7; color: #b45309; }
         .badge-leave { background-color: #fee2e2; color: #b91c1c; }
-
         .badge-male { background-color: #e0e7ff; color: #3730a3; }
         .badge-female { background-color: #fce7f3; color: #9d174d; }
 
-        /* النوافذ المنبثقة */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: white; padding: 25px; border-radius: 10px; width: 540px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
         .modal-content h3 { margin-top: 0; color: var(--primary-color); }
@@ -99,7 +93,6 @@
         .form-group input, .form-group select { width: 100%; box-sizing: border-box; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
-        /* حقوق التصميم */
         .designer-footer {
             margin-top: 30px;
             padding: 12px;
@@ -126,7 +119,6 @@
         <h1>مدرسة معمل القزاز الثانوية المشتركة</h1>
         <p class="subtitle">نظام إدارة السجلات والحصص والحالات والإحصائيات المحمي</p>
 
-        <!-- لوحة الإحصائيات (تستثني المنتدب إلى والإجازات تلقائياً) -->
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>الفعلية بالمدرسة</h3>
@@ -158,7 +150,6 @@
             </div>
         </div>
 
-        <!-- أدوات التحكم والبحث -->
         <div class="controls">
             <input type="text" id="searchInput" onkeyup="filterData()" placeholder="ابحث باسم المعلم، الكود، الرقم القومي، التليفون، أو التخصص...">
             <select id="genderFilter" onchange="filterData()">
@@ -181,7 +172,6 @@
             <button class="btn btn-print" onclick="window.print()">طباعة السجل</button>
         </div>
 
-        <!-- جدول العرض -->
         <div class="table-responsive">
             <table id="staffTable">
                 <thead>
@@ -206,13 +196,11 @@
             </table>
         </div>
 
-        <!-- التذييل بحقوق التصميم -->
         <div class="designer-footer">
             تصميم وتطوير البرنامج: أ / محمد عبدالوهاب القزاز — أخصائي نفسي بمدرسة معمل القزاز الثانوية المشتركة
         </div>
     </div>
 
-    <!-- نافذة إضافة / تعديل البيانات -->
     <div class="modal" id="dataModal">
         <div class="modal-content">
             <h3 id="modalTitle">بيانات الموظف</h3>
@@ -286,104 +274,143 @@
         const ADMIN_PASSWORD = "1234";
 
         // =============================================
-        // البيانات الأولية (سوف تُحفظ لأول مرة فقط)
+        // إعدادات JSONBin.io
+        // =============================================
+        const JSONBIN_API_KEY = "$2a$10$UIsR.ywSeF2FO3hGxydn8upy6GizBVc3x.LhGexSy3S3/GgXy2Ev2";
+        const JSONBIN_BIN_ID = "6a9c9723f5f4af5e296f8a7c";
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+
+        // =============================================
+        // البيانات الافتراضية (69 موظف)
         // =============================================
         const defaultStaffData = [
-          { id: 1, code: "3470613", nationalId: "30009281800215", name: "ابراهيم عبد الرازق عبد الونيس منبي خليف", phone: "-", subject: "كيمياء", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 2, code: "478529", nationalId: "27905281801419", name: "احمد ايوب محمود الحناوي", phone: "-", subject: "الفلسفة والمنطق", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 3, code: "2489162", nationalId: "28310201803351", name: "أحمد شحاته محمود يوسف", phone: "-", subject: "فيزياء", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 4, code: "3539514", nationalId: "29002281801696", name: "احمد عبد الستار عبد السلام الشريف", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم بالحصه", qualification: "ليسانس دار العلوم", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 5, code: "446024", nationalId: "27903031803511", name: "احمد متولى محمد خاطر", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 6, code: "478300", nationalId: "27202070103293", name: "أحمد مختار زكريا محمد", phone: "-", subject: "رياضيات", jobTitle: "معلم أول أ", qualification: "بكالوريوس علوم", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 7, code: "478700", nationalId: "27906271802014", name: "اسامه ابراهيم عبد الحسيب عبد الحميد", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 8, code: "2514068", nationalId: "28109132700939", name: "اسامه النوبي عبد الرازق عبد الحليم", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 9, code: "2761591", nationalId: "28501011839759", name: "السيد عبدربه محمود محمد", phone: "-", subject: "رياضيات", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 10, code: "2785697", nationalId: "27912201804893", name: "الصافى فرج ابراهيم عبد العال", phone: "-", subject: "خدمات أمانة معمل", jobTitle: "أمين معمل", qualification: "محو أميه", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 11, code: "3043115", nationalId: "28907171803587", name: "امل اسماعيل عبد الموجود السيد", phone: "-", subject: "صحافة وإعلام", jobTitle: "أخصائي صحافة واعلام أول", qualification: "ليسانس دراسات اسلامية", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 12, code: "478699", nationalId: "27704051802607", name: "ایمان سعيد على مصطفى", phone: "-", subject: "مكتبات", jobTitle: "أمين مكتبة خبير", qualification: "ليسانس اداب وحاصل على برنامج التأهيل التربوي", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 13, code: "478208", nationalId: "28107131802328", name: "ايمان عياد امجد بركات", phone: "-", subject: "احياء", jobTitle: "معلم أول أ", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 14, code: "478530", nationalId: "27909071801225", name: "ايناس عبد الخالق محروس على", phone: "-", subject: "اقتصاد منزلي", jobTitle: "معلم خبير", qualification: "بكالوريوس تربية نوعية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 15, code: "3470654", nationalId: "29605021800064", name: "جهاد سعداوي سعد حسنين", phone: "-", subject: "فيزياء", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 16, code: "478695", nationalId: "27012071802795", name: "حامد محمود رمضان قیقی", phone: "-", subject: "جغرافيا", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 17, code: "478533", nationalId: "27202201802877", name: "حسام الدين ابراهيم عبد اللطيف ابو الخير", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب وتربية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 18, code: "2785683", nationalId: "28302121804257", name: "حسن رجب جمعه على", phone: "-", subject: "خدمات أمانة معمل", jobTitle: "أمين معمل", qualification: "محو أميه", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 19, code: "2183609", nationalId: "27901161803757", name: "حسنى فؤاد محمد الششتاوى", phone: "-", subject: "حاسب آلى متفرغ", jobTitle: "معلم أول أ", qualification: "دبلوم خاص في التربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 20, code: "478691", nationalId: "28001061805151", name: "خيرى محمد شعبان عبد الله", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 21, code: "478593", nationalId: "27402011803361", name: "رحاب السيد محمد اللقاني", phone: "-", subject: "مجال صناعی", jobTitle: "معلم أول أ", qualification: "بكالوريوس تربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 22, code: "2763470", nationalId: "28606231803042", name: "رشا سعيد عبده رسلان", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 23, code: "478268", nationalId: "28102160201307", name: "رشا محمد عبد الفتاح محمود صقر", phone: "-", subject: "مجال زراعی", jobTitle: "معلم خبير", qualification: "بكالوريوس الزراعة", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 24, code: "478583", nationalId: "26906051801773", name: "سامی احمد سعد محمود", phone: "-", subject: "حاسب آلى متفرغ", jobTitle: "كبير معلمين", qualification: "بكالوريوس تجارة وحاصل على برنامج التأهيل التربوي", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 25, code: "478689", nationalId: "27804201802354", name: "سعيد عبد اللطيف محمد سعيد", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 26, code: "476165", nationalId: "28205131801544", name: "سماح ممدوح رزق حسن هيبه", phone: "-", subject: "كيمياء", jobTitle: "معلم أول أ", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 27, code: "2776680", nationalId: "27611061803522", name: "سنيه سالم على سالم", phone: "-", subject: "مجال صناعی", jobTitle: "معلم أول", qualification: "بكالوريوس هندسة وحاصل على دبلومة تربوية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 28, code: "478327", nationalId: "27908021801848", name: "شرين رشاد على عبد الفتاح عبد الحليم", phone: "-", subject: "اقتصاد منزلي", jobTitle: "معلم خبير", qualification: "بكالوريوس تربية نوعية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 29, code: "2621673", nationalId: "27809281800031", name: "شوقى محمد محمود عامر", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم أول", qualification: "ليسانس اداب", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 30, code: "2535327", nationalId: "28906041801861", name: "شيماء احمد على عبد الحليم", phone: "-", subject: "شؤون تعليم ورعاية", jobTitle: "فنى رابع تعليم / نشاط / خدمات", qualification: "دبلوم صناعة ثانوى", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 31, code: "3005746", nationalId: "29205061800417", name: "صابر شريف طاهر مصطفى", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 32, code: "392326", nationalId: "26810191801971", name: "صالح احمد محمود دبل", phone: "-", subject: "كيمياء", jobTitle: "كبير معلمين", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 33, code: "475029", nationalId: "28104261802177", name: "صبحى رمضان معوض عبد الله", phone: "-", subject: "الفلسفة والمنطق", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 34, code: "3539508", nationalId: "28908101804795", name: "عادل محسن محمد محمود صبره", phone: "-", subject: "رياضيات", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 35, code: "2499913", nationalId: "28011111802553", name: "عاشور محمد محمد اسماعيل", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم أول - وكيل مدرسة", qualification: "بكالوريوس تربية", weeklyQuota: 6, monthlyQuota: 24, status: "أصلي" },
-          { id: 36, code: "478743", nationalId: "27712051801701", name: "عايده جمال امین مرعی", phone: "-", subject: "الفلسفة والمنطق", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 37, code: "478690", nationalId: "28001261802254", name: "عبد المؤمن عبد اللطيف محمد سعيد", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 38, code: "2763484", nationalId: "28702011813739", name: "عبده مسعود السيد محمد", phone: "-", subject: "رياضيات", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 39, code: "478343", nationalId: "26711081802094", name: "علاء الدين محمد عبد الرازق رشدان", phone: "-", subject: "تربية اجتماعية", jobTitle: "كبير أخصائيين اجتماعيين", qualification: "ليسانس اداب وحاصل على برنامج التأهيل التربوي", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 40, code: "2191649", nationalId: "28302081804275", name: "عماد عبد الجيد عبد الحفيظ محمد", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم أول أ - مدير مدرسة", qualification: "ليسانس اداب وتربية", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 41, code: "478677", nationalId: "27512011804414", name: "فتحى ابراهيم السيد قادوم", phone: "-", subject: "لغة انجليزية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 42, code: "444292", nationalId: "26902061802128", name: "ليلي محمد عبده بسيوني", phone: "-", subject: "جغرافيا", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 43, code: "2630440", nationalId: "28409061800558", name: "محمد ابراهيم محمد جمعة", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 44, code: "2911702", nationalId: "27907271800816", name: "محمد حسن على البليهي", phone: "-", subject: "خدمات معاونة", jobTitle: "عامل خدمات", qualification: "محو أميه", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 45, code: "478737", nationalId: "28304051805351", name: "محمد شحاته مكرم على", phone: "-", subject: "دراسات اجتماعية", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 46, code: "2211897", nationalId: "28408211802175", name: "محمد صبرى كامل مرسى غنیم", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم", qualification: "ماجستير في التربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 47, code: "478694", nationalId: "28004031802611", name: "محمد عبد العزيز ابو سريع محمد", phone: "-", subject: "مجال صناعی", jobTitle: "معلم خبير", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 48, code: "2027238", nationalId: "27804151803753", name: "محمد عبد العظيم احمد السيد", phone: "-", subject: "رياضيات", jobTitle: "معلم خبير", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 49, code: "2480188", nationalId: "28410021802475", name: "محمد عبد الوهاب عبد الجليل القزاز", phone: "-", subject: "تربية نفسية", jobTitle: "أخصائي نفسي", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 50, code: "3470691", nationalId: "29806011813414", name: "محمود احمد ابو بكر عبد العزيز", phone: "-", subject: "رياضيات", jobTitle: "معلم بالحصه", qualification: "دبلوم معهد السكرتارية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 51, code: "2776641", nationalId: "28603131802252", name: "محمود السيد محمد عبد الغنى", phone: "-", subject: "دراسات إجتماعية", jobTitle: "معلم أول", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 52, code: "478655", nationalId: "27005141802171", name: "محمود حسن على حسن", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب وتربية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 53, code: "2160875", nationalId: "28504101802713", name: "محمود خميس على على", phone: "-", subject: "رياضيات", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 54, code: "2279698", nationalId: "28402081803117", name: "محمود رياض محمود مصطفى محيسن", phone: "-", subject: "شؤون فنية", jobTitle: "فنى ثالث", qualification: "دبلوم صناعة ثانوى", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 55, code: "3482475", nationalId: "29301231803059", name: "محمود عادل علي بسيوني", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم بالحصه", qualification: "ليسانس شريعة وقانون - وحاصل على برنامج التأهيل التربوي", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 56, code: "478678", nationalId: "27101211802173", name: "مدحت سعيد حسنين حجاج", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 57, code: "478645", nationalId: "28301101804904", name: "مروه محمد مصطفى عبد التواب", phone: "-", subject: "تربية فنية", jobTitle: "معلم خبير", qualification: "بكالوريوس تربية نوعية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 58, code: "478484", nationalId: "27505031803353", name: "مصطفى محمد ابراهيم صقر", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب وتربية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 59, code: "478663", nationalId: "27101011808673", name: "مصطفى محمود كامل الصباغ", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 60, code: "2524185", nationalId: "28209221802065", name: "مها صالح محمد عيد صالح", phone: "-", subject: "الفلسفة والمنطق", jobTitle: "معلم أول", qualification: "ليسانس آداب", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 61, code: "2775679", nationalId: "28606141804503", name: "مها محمد محمود القرنشاوى", phone: "-", subject: "تربية اجتماعية", jobTitle: "أخصائي اجتماعي أول", qualification: "بكالوريوس خدمة اجتماعية وحاصل على دبلومة تربوية", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
-          { id: 62, code: "2016276", nationalId: "26809291801457", name: "ناصر السيد محمد خطاب", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 63, code: "2727005", nationalId: "28912121802508", name: "هبه احمد حسن رمضان", phone: "-", subject: "تربية فنية", jobTitle: "معلم أول أ", qualification: "بكالوريوس تربية نوعية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 64, code: "2509876", nationalId: "28207171801868", name: "هبه احمد عبد الفتاح مصطفى التراس", phone: "-", subject: "تربية رياضية", jobTitle: "معلم أول أ", qualification: "بكالوريوس تربية رياضية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 65, code: "3470741", nationalId: "29501081800748", name: "هدى خبيري ابراهيم ابراهيم", phone: "-", subject: "فيزياء", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 66, code: "2512210", nationalId: "28007311801295", name: "وائل رشاد سعید محمد", phone: "-", subject: "علم نفس واجتماع", jobTitle: "معلم أول", qualification: "ليسانس اداب", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
-          { id: 67, code: "478576", nationalId: "27811201805198", name: "وليد حسين على على زيد", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
-          { id: 68, code: "475859", nationalId: "27008231801718", name: "ياسر زغلول السنوسي بلبع", phone: "-", subject: "تربية رياضية", jobTitle: "كبير معلمين", qualification: "بكالوريوس تربية رياضية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
-          { id: 69, code: "2662532", nationalId: "28310181801969", name: "يسرا محمد عبد الله متولى ابويوسف", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" }
+            { id: 1, code: "3470613", nationalId: "30009281800215", name: "ابراهيم عبد الرازق عبد الونيس منبي خليف", phone: "-", subject: "كيمياء", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 2, code: "478529", nationalId: "27905281801419", name: "احمد ايوب محمود الحناوي", phone: "-", subject: "الفلسفة والمنطق", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 3, code: "2489162", nationalId: "28310201803351", name: "أحمد شحاته محمود يوسف", phone: "-", subject: "فيزياء", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 4, code: "3539514", nationalId: "29002281801696", name: "احمد عبد الستار عبد السلام الشريف", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم بالحصه", qualification: "ليسانس دار العلوم", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 5, code: "446024", nationalId: "27903031803511", name: "احمد متولى محمد خاطر", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 6, code: "478300", nationalId: "27202070103293", name: "أحمد مختار زكريا محمد", phone: "-", subject: "رياضيات", jobTitle: "معلم أول أ", qualification: "بكالوريوس علوم", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 7, code: "478700", nationalId: "27906271802014", name: "اسامه ابراهيم عبد الحسيب عبد الحميد", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 8, code: "2514068", nationalId: "28109132700939", name: "اسامه النوبي عبد الرازق عبد الحليم", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 9, code: "2761591", nationalId: "28501011839759", name: "السيد عبدربه محمود محمد", phone: "-", subject: "رياضيات", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 10, code: "2785697", nationalId: "27912201804893", name: "الصافى فرج ابراهيم عبد العال", phone: "-", subject: "خدمات أمانة معمل", jobTitle: "أمين معمل", qualification: "محو أميه", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 11, code: "3043115", nationalId: "28907171803587", name: "امل اسماعيل عبد الموجود السيد", phone: "-", subject: "صحافة وإعلام", jobTitle: "أخصائي صحافة واعلام أول", qualification: "ليسانس دراسات اسلامية", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 12, code: "478699", nationalId: "27704051802607", name: "ایمان سعيد على مصطفى", phone: "-", subject: "مكتبات", jobTitle: "أمين مكتبة خبير", qualification: "ليسانس اداب وحاصل على برنامج التأهيل التربوي", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 13, code: "478208", nationalId: "28107131802328", name: "ايمان عياد امجد بركات", phone: "-", subject: "احياء", jobTitle: "معلم أول أ", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 14, code: "478530", nationalId: "27909071801225", name: "ايناس عبد الخالق محروس على", phone: "-", subject: "اقتصاد منزلي", jobTitle: "معلم خبير", qualification: "بكالوريوس تربية نوعية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 15, code: "3470654", nationalId: "29605021800064", name: "جهاد سعداوي سعد حسنين", phone: "-", subject: "فيزياء", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 16, code: "478695", nationalId: "27012071802795", name: "حامد محمود رمضان قیقی", phone: "-", subject: "جغرافيا", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 17, code: "478533", nationalId: "27202201802877", name: "حسام الدين ابراهيم عبد اللطيف ابو الخير", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب وتربية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 18, code: "2785683", nationalId: "28302121804257", name: "حسن رجب جمعه على", phone: "-", subject: "خدمات أمانة معمل", jobTitle: "أمين معمل", qualification: "محو أميه", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 19, code: "2183609", nationalId: "27901161803757", name: "حسنى فؤاد محمد الششتاوى", phone: "-", subject: "حاسب آلى متفرغ", jobTitle: "معلم أول أ", qualification: "دبلوم خاص في التربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 20, code: "478691", nationalId: "28001061805151", name: "خيرى محمد شعبان عبد الله", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 21, code: "478593", nationalId: "27402011803361", name: "رحاب السيد محمد اللقاني", phone: "-", subject: "مجال صناعی", jobTitle: "معلم أول أ", qualification: "بكالوريوس تربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 22, code: "2763470", nationalId: "28606231803042", name: "رشا سعيد عبده رسلان", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 23, code: "478268", nationalId: "28102160201307", name: "رشا محمد عبد الفتاح محمود صقر", phone: "-", subject: "مجال زراعی", jobTitle: "معلم خبير", qualification: "بكالوريوس الزراعة", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 24, code: "478583", nationalId: "26906051801773", name: "سامی احمد سعد محمود", phone: "-", subject: "حاسب آلى متفرغ", jobTitle: "كبير معلمين", qualification: "بكالوريوس تجارة وحاصل على برنامج التأهيل التربوي", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 25, code: "478689", nationalId: "27804201802354", name: "سعيد عبد اللطيف محمد سعيد", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 26, code: "476165", nationalId: "28205131801544", name: "سماح ممدوح رزق حسن هيبه", phone: "-", subject: "كيمياء", jobTitle: "معلم أول أ", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 27, code: "2776680", nationalId: "27611061803522", name: "سنيه سالم على سالم", phone: "-", subject: "مجال صناعی", jobTitle: "معلم أول", qualification: "بكالوريوس هندسة وحاصل على دبلومة تربوية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 28, code: "478327", nationalId: "27908021801848", name: "شرين رشاد على عبد الفتاح عبد الحليم", phone: "-", subject: "اقتصاد منزلي", jobTitle: "معلم خبير", qualification: "بكالوريوس تربية نوعية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 29, code: "2621673", nationalId: "27809281800031", name: "شوقى محمد محمود عامر", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم أول", qualification: "ليسانس اداب", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 30, code: "2535327", nationalId: "28906041801861", name: "شيماء احمد على عبد الحليم", phone: "-", subject: "شؤون تعليم ورعاية", jobTitle: "فنى رابع تعليم / نشاط / خدمات", qualification: "دبلوم صناعة ثانوى", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 31, code: "3005746", nationalId: "29205061800417", name: "صابر شريف طاهر مصطفى", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 32, code: "392326", nationalId: "26810191801971", name: "صالح احمد محمود دبل", phone: "-", subject: "كيمياء", jobTitle: "كبير معلمين", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 33, code: "475029", nationalId: "28104261802177", name: "صبحى رمضان معوض عبد الله", phone: "-", subject: "الفلسفة والمنطق", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 34, code: "3539508", nationalId: "28908101804795", name: "عادل محسن محمد محمود صبره", phone: "-", subject: "رياضيات", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 35, code: "2499913", nationalId: "28011111802553", name: "عاشور محمد محمد اسماعيل", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم أول - وكيل مدرسة", qualification: "بكالوريوس تربية", weeklyQuota: 6, monthlyQuota: 24, status: "أصلي" },
+            { id: 36, code: "478743", nationalId: "27712051801701", name: "عايده جمال امین مرعی", phone: "-", subject: "الفلسفة والمنطق", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 37, code: "478690", nationalId: "28001261802254", name: "عبد المؤمن عبد اللطيف محمد سعيد", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 38, code: "2763484", nationalId: "28702011813739", name: "عبده مسعود السيد محمد", phone: "-", subject: "رياضيات", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 39, code: "478343", nationalId: "26711081802094", name: "علاء الدين محمد عبد الرازق رشدان", phone: "-", subject: "تربية اجتماعية", jobTitle: "كبير أخصائيين اجتماعيين", qualification: "ليسانس اداب وحاصل على برنامج التأهيل التربوي", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 40, code: "2191649", nationalId: "28302081804275", name: "عماد عبد الجيد عبد الحفيظ محمد", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم أول أ - مدير مدرسة", qualification: "ليسانس اداب وتربية", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 41, code: "478677", nationalId: "27512011804414", name: "فتحى ابراهيم السيد قادوم", phone: "-", subject: "لغة انجليزية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 42, code: "444292", nationalId: "26902061802128", name: "ليلي محمد عبده بسيوني", phone: "-", subject: "جغرافيا", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 43, code: "2630440", nationalId: "28409061800558", name: "محمد ابراهيم محمد جمعة", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 44, code: "2911702", nationalId: "27907271800816", name: "محمد حسن على البليهي", phone: "-", subject: "خدمات معاونة", jobTitle: "عامل خدمات", qualification: "محو أميه", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 45, code: "478737", nationalId: "28304051805351", name: "محمد شحاته مكرم على", phone: "-", subject: "دراسات اجتماعية", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 46, code: "2211897", nationalId: "28408211802175", name: "محمد صبرى كامل مرسى غنیم", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم", qualification: "ماجستير في التربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 47, code: "478694", nationalId: "28004031802611", name: "محمد عبد العزيز ابو سريع محمد", phone: "-", subject: "مجال صناعی", jobTitle: "معلم خبير", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 48, code: "2027238", nationalId: "27804151803753", name: "محمد عبد العظيم احمد السيد", phone: "-", subject: "رياضيات", jobTitle: "معلم خبير", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 49, code: "2480188", nationalId: "28410021802475", name: "محمد عبد الوهاب عبد الجليل القزاز", phone: "-", subject: "تربية نفسية", jobTitle: "أخصائي نفسي", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 50, code: "3470691", nationalId: "29806011813414", name: "محمود احمد ابو بكر عبد العزيز", phone: "-", subject: "رياضيات", jobTitle: "معلم بالحصه", qualification: "دبلوم معهد السكرتارية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 51, code: "2776641", nationalId: "28603131802252", name: "محمود السيد محمد عبد الغنى", phone: "-", subject: "دراسات إجتماعية", jobTitle: "معلم أول", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 52, code: "478655", nationalId: "27005141802171", name: "محمود حسن على حسن", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب وتربية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 53, code: "2160875", nationalId: "28504101802713", name: "محمود خميس على على", phone: "-", subject: "رياضيات", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 54, code: "2279698", nationalId: "28402081803117", name: "محمود رياض محمود مصطفى محيسن", phone: "-", subject: "شؤون فنية", jobTitle: "فنى ثالث", qualification: "دبلوم صناعة ثانوى", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 55, code: "3482475", nationalId: "29301231803059", name: "محمود عادل علي بسيوني", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم بالحصه", qualification: "ليسانس شريعة وقانون - وحاصل على برنامج التأهيل التربوي", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 56, code: "478678", nationalId: "27101211802173", name: "مدحت سعيد حسنين حجاج", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 57, code: "478645", nationalId: "28301101804904", name: "مروه محمد مصطفى عبد التواب", phone: "-", subject: "تربية فنية", jobTitle: "معلم خبير", qualification: "بكالوريوس تربية نوعية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 58, code: "478484", nationalId: "27505031803353", name: "مصطفى محمد ابراهيم صقر", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب وتربية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 59, code: "478663", nationalId: "27101011808673", name: "مصطفى محمود كامل الصباغ", phone: "-", subject: "لغة عربية ودين", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 60, code: "2524185", nationalId: "28209221802065", name: "مها صالح محمد عيد صالح", phone: "-", subject: "الفلسفة والمنطق", jobTitle: "معلم أول", qualification: "ليسانس آداب", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 61, code: "2775679", nationalId: "28606141804503", name: "مها محمد محمود القرنشاوى", phone: "-", subject: "تربية اجتماعية", jobTitle: "أخصائي اجتماعي أول", qualification: "بكالوريوس خدمة اجتماعية وحاصل على دبلومة تربوية", weeklyQuota: 0, monthlyQuota: 0, status: "أصلي" },
+            { id: 62, code: "2016276", nationalId: "26809291801457", name: "ناصر السيد محمد خطاب", phone: "-", subject: "لغة إنجليزية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 63, code: "2727005", nationalId: "28912121802508", name: "هبه احمد حسن رمضان", phone: "-", subject: "تربية فنية", jobTitle: "معلم أول أ", qualification: "بكالوريوس تربية نوعية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 64, code: "2509876", nationalId: "28207171801868", name: "هبه احمد عبد الفتاح مصطفى التراس", phone: "-", subject: "تربية رياضية", jobTitle: "معلم أول أ", qualification: "بكالوريوس تربية رياضية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 65, code: "3470741", nationalId: "29501081800748", name: "هدى خبيري ابراهيم ابراهيم", phone: "-", subject: "فيزياء", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 66, code: "2512210", nationalId: "28007311801295", name: "وائل رشاد سعید محمد", phone: "-", subject: "علم نفس واجتماع", jobTitle: "معلم أول", qualification: "ليسانس اداب", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" },
+            { id: 67, code: "478576", nationalId: "27811201805198", name: "وليد حسين على على زيد", phone: "-", subject: "لغة فرنسية", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", weeklyQuota: 16, monthlyQuota: 64, status: "أصلي" },
+            { id: 68, code: "475859", nationalId: "27008231801718", name: "ياسر زغلول السنوسي بلبع", phone: "-", subject: "تربية رياضية", jobTitle: "كبير معلمين", qualification: "بكالوريوس تربية رياضية", weeklyQuota: 14, monthlyQuota: 56, status: "أصلي" },
+            { id: 69, code: "2662532", nationalId: "28310181801969", name: "يسرا محمد عبد الله متولى ابويوسف", phone: "-", subject: "لغة عربية ودين", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", weeklyQuota: 18, monthlyQuota: 72, status: "أصلي" }
         ];
 
         // =============================================
-        // تحميل البيانات المحفوظة أو استخدام الافتراضي
+        // تحميل البيانات من JSONBin
         // =============================================
-        function loadData() {
-            const savedData = localStorage.getItem('staffData');
-            if (savedData) {
-                return JSON.parse(savedData);
-            } else {
-                // حفظ البيانات الافتراضية لأول مرة
-                localStorage.setItem('staffData', JSON.stringify(defaultStaffData));
-                return [...defaultStaffData];
+        let staffData = [];
+
+        async function loadDataFromCloud() {
+            try {
+                const response = await fetch(JSONBIN_URL, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': JSONBIN_API_KEY
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.record && data.record.staff && data.record.staff.length > 0) {
+                    staffData = data.record.staff;
+                } else {
+                    // لا توجد بيانات محفوظة، استخدم الافتراضية
+                    staffData = [...defaultStaffData];
+                    await saveDataToCloud();
+                }
+            } catch (error) {
+                console.error("خطأ في تحميل البيانات:", error);
+                staffData = [...defaultStaffData];
+            }
+            
+            initSubjectFilter();
+            renderTable(staffData);
+        }
+
+        // حفظ البيانات إلى JSONBin
+        async function saveDataToCloud() {
+            try {
+                const response = await fetch(JSONBIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_API_KEY
+                    },
+                    body: JSON.stringify({ staff: staffData })
+                });
+                
+                if (!response.ok) {
+                    console.error("خطأ في الحفظ:", await response.text());
+                } else {
+                    console.log("تم حفظ البيانات بنجاح في السحابة");
+                }
+            } catch (error) {
+                console.error("خطأ في الحفظ:", error);
             }
         }
 
-        // حفظ البيانات في LocalStorage
-        function saveDataToStorage() {
-            localStorage.setItem('staffData', JSON.stringify(staffData));
-        }
-
-        // تهيئة المتغير بالبيانات المحملة
-        let staffData = loadData();
-        let isAuthenticated = false;
-
-        // دالة حساب السن واستخراج النوع تلقائياً من الرقم القومي
+        // =============================================
+        // دوال حساب السن والنوع
+        // =============================================
         function parseNationalId(nationalId) {
             if (!nationalId || nationalId.length !== 14 || isNaN(nationalId)) {
                 return { age: "-", gender: "ذكر" };
@@ -410,7 +437,6 @@
             return { age: age >= 0 ? age : "-", gender: gender };
         }
 
-        // إكمال السن والنوع تلقائياً عند كتابة الرقم القومي في الشاشة
         function autoCalculateInfo() {
             const nid = document.getElementById('editNationalId').value.trim();
             if (nid.length === 14) {
@@ -439,7 +465,9 @@
             document.getElementById('editMonthlyQuota').value = weekly * 4;
         }
 
-        // تحديث كروت الإحصائيات
+        // =============================================
+        // تحديث الإحصائيات
+        // =============================================
         function updateStats() {
             const activeStaff = staffData.filter(item => item.status === "أصلي" || item.status === "منتدب من");
             const excludedStaff = staffData.filter(item => item.status === "منتدب إلى" || item.status === "إجازة");
@@ -492,7 +520,9 @@
             }
         }
 
+        // =============================================
         // عرض الجدول
+        // =============================================
         function renderTable(data) {
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
@@ -560,7 +590,11 @@
             renderTable(filtered);
         }
 
-        // فتح نافذة الإضافة
+        // =============================================
+        // النوافذ المنبثقة
+        // =============================================
+        let isAuthenticated = false;
+
         function openAddModal() {
             if (!checkAuth()) return;
             document.getElementById('modalTitle').textContent = "إضافة موظف جديد";
@@ -580,7 +614,6 @@
             document.getElementById('dataModal').style.display = 'flex';
         }
 
-        // فتح نافذة التعديل
         function openEditModal(id) {
             if (!checkAuth()) return;
             const item = staffData.find(record => record.id === id);
@@ -610,8 +643,8 @@
             document.getElementById('dataModal').style.display = 'none';
         }
 
-        // حفظ البيانات
-        function saveData() {
+        // حفظ البيانات (إضافة أو تعديل)
+        async function saveData() {
             const idVal = document.getElementById('editId').value;
             const name = document.getElementById('editName').value.trim();
             const nid = document.getElementById('editNationalId').value.trim();
@@ -657,26 +690,30 @@
                 }
             }
 
-            // حفظ البيانات في LocalStorage
-            saveDataToStorage();
+            // حفظ في السحابة
+            await saveDataToCloud();
 
             closeModal();
             initSubjectFilter();
             filterData();
         }
 
-        function deleteRecord(id) {
+        async function deleteRecord(id) {
             if (!checkAuth()) return;
             if (confirm("هل أنت تأكد من رغبتك في حذف هذا السجل؟")) {
                 staffData = staffData.filter(item => item.id !== id);
-                // حفظ البيانات في LocalStorage
-                saveDataToStorage();
+                
+                // حفظ في السحابة
+                await saveDataToCloud();
+                
                 initSubjectFilter();
                 filterData();
             }
         }
 
+        // =============================================
         // تصدير إلى Excel
+        // =============================================
         function exportToExcel() {
             const exportData = staffData.map((item, index) => {
                 const parsedInfo = parseNationalId(item.nationalId);
@@ -710,9 +747,9 @@
             XLSX.writeFile(workbook, "سجل_بيانات_العاملين_المدرسي.xlsx");
         }
 
+        // عند تحميل الصفحة
         window.onload = () => {
-            initSubjectFilter();
-            renderTable(staffData);
+            loadDataFromCloud();
         };
     </script>
 </body>
