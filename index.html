@@ -3,595 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة بيانات المعلمين والموظفين الشامل (71 موظفاً)</title>
-    <!-- مكتبة تصدير Excel -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <title>سجل بيانات هيئة التدريس والعاملين - مدرسة معمل القزاز الثانوية المشتركة</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); min-height: 100vh; padding: 20px; color: #333; }
-        .container { max-width: 1650px; margin: 0 auto; }
-        .navbar { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 15px; padding: 15px 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-        .navbar-brand { font-size: 1.4rem; font-weight: bold; color: #182848; }
-        .navbar-nav { display: flex; gap: 10px; list-style: none; flex-wrap: wrap; }
-        .nav-link { color: #333; text-decoration: none; padding: 8px 16px; border-radius: 8px; transition: all 0.3s; cursor: pointer; font-weight: 600; }
-        .nav-link:hover, .nav-link.active { background: #4b6cb7; color: white; }
-        .card { background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-        .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { text-align: center; color: white; border-radius: 12px; padding: 18px; }
-        .stat-card h3 { font-size: 1rem; opacity: 0.9; }
-        .stat-card h2 { font-size: 2.2rem; margin-top: 8px; }
-        .stat-card.blue { background: linear-gradient(135deg, #36d1dc, #5b86e5); }
-        .stat-card.green { background: linear-gradient(135deg, #11998e, #38ef7d); }
-        .stat-card.orange { background: linear-gradient(135deg, #ff9966, #ff5e62); }
-        .stat-card.purple { background: linear-gradient(135deg, #8e2de2, #4a00e0); }
-        .table-container { overflow-x: auto; max-height: 620px; overflow-y: auto; border-radius: 10px; border: 1px solid #e0e0e0; }
-        table { width: 100%; border-collapse: collapse; background: white; font-size: 0.88rem; }
-        table th { background: #182848; color: white; padding: 12px 8px; text-align: right; position: sticky; top: 0; z-index: 10; white-space: nowrap; }
-        table td { padding: 10px 8px; border-bottom: 1px solid #eee; text-align: right; white-space: nowrap; }
-        table tr:hover { background: #f0f4f9; }
-        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s; font-size: 0.82rem; }
-        .btn-primary { background: #4b6cb7; color: white; }
-        .btn-success { background: #11998e; color: white; }
-        .btn-excel { background: #1d6f42; color: white; }
-        .btn-danger { background: #ff5e62; color: white; }
-        .btn-warning { background: #ffb300; color: #222; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; backdrop-filter: blur(4px); }
-        .modal-content { background: white; border-radius: 15px; max-width: 750px; margin: 30px auto; padding: 25px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        .close-btn { position: absolute; left: 20px; top: 20px; font-size: 1.5rem; cursor: pointer; color: #888; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
-        .form-group { margin-bottom: 10px; }
-        .form-group.full-width { grid-column: 1 / -1; }
-        .form-group label { display: block; margin-bottom: 4px; font-weight: bold; color: #444; font-size: 0.85rem; }
-        .form-group input, .form-group select { width: 100%; padding: 9px; border: 1px solid #ccc; border-radius: 8px; font-size: 13px; outline: none; }
-        .form-group input:focus, .form-group select:focus { border-color: #4b6cb7; }
-        .form-group input[readonly] { background-color: #f5f5f5; color: #555; cursor: not-allowed; }
-        .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 15px; }
-        .checkbox-group input { width: auto; }
-        .search-box { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
-        .search-box input, .search-box select { padding: 9px 12px; border: 1px solid #ccc; border-radius: 8px; outline: none; font-size: 0.9rem; }
-        .search-box input { flex: 2; min-width: 220px; }
-        .search-box select { flex: 1; min-width: 150px; }
-        .section { display: none; }
-        .section.active { display: block; }
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; }
-        .badge-success { background: #e8f5e9; color: #2e7d32; }
-        .badge-danger { background: #ffebee; color: #c62828; }
-        .code-badge { background: #e8eaf6; color: #283593; padding: 3px 7px; border-radius: 6px; font-weight: bold; font-family: monospace; }
-        .auto-tag { font-size: 0.72rem; color: #ff9800; font-weight: normal; margin-right: 5px; }
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #0284c7;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 1.8rem;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"], select {
+            padding: 10px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"] {
+            flex: 2;
+            min-width: 250px;
+        }
+
+        select {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .btn-print {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-print:hover {
+            background-color: #1d4ed8;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 10px;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .badge-code {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .badge-id {
+            font-family: monospace;
+            letter-spacing: 0.5px;
+            color: #334155;
+        }
+
+        .stats-count {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #64748b;
+            text-align: left;
+        }
+
+        @media print {
+            .controls, .stats-count { display: none; }
+            body { padding: 0; background: white; }
+            .container { box-shadow: none; padding: 0; max-width: 100%; }
+            th { background-color: #333 !important; color: white !important; }
+            td, th { padding: 6px; font-size: 0.8rem; }
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <nav class="navbar">
-            <div class="navbar-brand">🔒 نظام إدارة بيانات جميع المعلمين والموظفين (71)</div>
-            <ul class="navbar-nav">
-                <li><a class="nav-link active" onclick="showSection('dashboard')">الرئيسية</a></li>
-                <li><a class="nav-link" onclick="showSection('employees')">سجل الموظفين والمعلمين</a></li>
-            </ul>
-        </nav>
+        <h1>مدرسة معمل القزاز الثانوية المشتركة</h1>
+        <p class="subtitle">سجل بيانات هيئة التدريس والعاملين والأرقام القومية</p>
 
-        <!-- الصفحة الرئيسية -->
-        <div id="dashboard" class="section active">
-            <div class="row">
-                <div class="stat-card blue"><h3>إجمالي الكادر</h3><h2 id="totalEmployees">0</h2></div>
-                <div class="stat-card green"><h3>ذكور</h3><h2 id="maleEmployees">0</h2></div>
-                <div class="stat-card orange"><h3>إناث</h3><h2 id="femaleEmployees">0</h2></div>
-                <div class="stat-card purple"><h3>مشمولون بالكادر</h3><h2 id="coveredEmployees">0</h2></div>
-            </div>
-            <div class="card">
-                <h3>إجراءات لوحة التحكم</h3>
-                <p style="margin: 10px 0; color: #666; font-size: 0.9rem;">🔒 ملاحظة: عمليات الإضافة والتعديل والحذف تتطلب إدخال الرقم السري النظام الحامي (الافتراضي: <b>1234</b>).</p>
-                <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-success" onclick="protectedAction(() => showAddModal())">➕ إضافة موظف جديد</button>
-                    <button class="btn btn-excel" onclick="exportToExcel(false)">📊 تصدير السجل الكامل Excel</button>
-                    <button class="btn btn-danger" onclick="protectedAction(() => resetToDefaultData())">🔄 استعادة البيانات الأصلية (71 معلم)</button>
-                </div>
-            </div>
+        <!-- أدوات التحكم والبحث -->
+        <div class="controls">
+            <input type="text" id="searchInput" onkeyup="filterData()" placeholder="ابحث باسم المعلم، الكود، الرقم القومي، أو التخصص...">
+            <select id="subjectFilter" onchange="filterData()">
+                <option value="">جميع التخصصات / المواد</option>
+            </select>
+            <button class="btn-print" onclick="window.print()">طباعة السجل</button>
         </div>
 
-        <!-- سجل الموظفين -->
-        <div id="employees" class="section">
-            <div class="card">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 بحث بالاسم، كود المعلم، الرقم القومي، الهاتف، الوظيفة، العنوان..." oninput="filterEmployees()">
-                    <select id="jobFilter" onchange="filterEmployees()">
-                        <option value="">جميع الوظائف</option>
-                    </select>
-                    <span style="font-size: 0.85rem; font-weight: bold; color: #555;" id="resultsCount">النتائج: 0</span>
-                    <button class="btn btn-excel" onclick="exportToExcel(true)">📊 تصدير المفلتر فقط Excel</button>
-                    <button class="btn btn-success" onclick="protectedAction(() => showAddModal())">➕ إضافة جديد</button>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>كود المعلم</th>
-                                <th>الاسم الكامل</th>
-                                <th>الرقم القومي</th>
-                                <th>السن</th>
-                                <th>النوع</th>
-                                <th>الوظيفة الحالية</th>
-                                <th>تاريخ الوظيفة الحالية</th>
-                                <th>المادة / التخصص</th>
-                                <th>رقم التليفون</th>
-                                <th>العنوان</th>
-                                <th>المؤهل الدراسي</th>
-                                <th>تاريخ التعيين</th>
-                                <th>الكادر</th>
-                                <th>إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="employeesTable"></tbody>
-                    </table>
-                </div>
-            </div>
+        <!-- جدول عرض البيانات -->
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>م</th>
+                        <th>الاسم الكامل</th>
+                        <th>كود المعلم</th>
+                        <th>الرقم القومي</th>
+                        <th>الوظيفة / الصفة</th>
+                        <th>المادة / التخصص</th>
+                        <th>المؤهل الدراسي</th>
+                        <th>تاريخ التعيين</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- يتم تعبئة البيانات تلقائياً -->
+                </tbody>
+            </table>
         </div>
-    </div>
 
-    <!-- نافذة الإضافة والتعديل -->
-    <div id="employeeModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 id="modalTitle" style="margin-bottom: 20px; color: #182848;">إضافة موظف جديد</h3>
-            <form id="employeeForm" onsubmit="handleFormSubmit(event)">
-                <input type="hidden" id="editIndex" value="-1">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>كود المعلم/الموظف *</label>
-                        <input type="number" id="empCode" required placeholder="مثال: 1001">
-                    </div>
-                    <div class="form-group">
-                        <label>الرقم القومي (14 رقم) *</label>
-                        <input type="text" id="nationalId" maxlength="14" required placeholder="أدخل 14 رقم لاستخراج السن تلقائياً" oninput="calculateNationalIdData()">
-                    </div>
-                    <div class="form-group full-width">
-                        <label>الاسم الكامل *</label>
-                        <input type="text" id="fullName" required placeholder="أدخل الاسم الرباعي">
-                    </div>
-                    <div class="form-group">
-                        <label>السن <span class="auto-tag">(تلقائي)</span></label>
-                        <input type="text" id="age" readonly placeholder="يُحسب من الرقم القومي">
-                    </div>
-                    <div class="form-group">
-                        <label>النوع <span class="auto-tag">(تلقائي)</span></label>
-                        <input type="text" id="gender" readonly placeholder="يُحدد من الرقم القومي">
-                    </div>
-                    <div class="form-group">
-                        <label>الوظيفة الحالية *</label>
-                        <input type="text" id="jobTitle" required list="jobList" placeholder="حدد أو اكتب الوظيفة">
-                        <datalist id="jobList">
-                            <option value="معلم بالحصة"></option>
-                            <option value="معلم"></option>
-                            <option value="معلم أول"></option>
-                            <option value="معلم أول أ"></option>
-                            <option value="معلم خبير"></option>
-                            <option value="كبير معلمين"></option>
-                            <option value="أخصائي اجتماعي أول"></option>
-                            <option value="أخصائي نفسي"></option>
-                            <option value="أمين معمل"></option>
-                            <option value="أمين مكتبة خبير"></option>
-                            <option value="فنى ثالث"></option>
-                            <option value="فنى رابع تعليم"></option>
-                        </datalist>
-                    </div>
-                    <div class="form-group">
-                        <label>تاريخ شغل الوظيفة الحالية</label>
-                        <input type="date" id="currentJobDate">
-                    </div>
-                    <div class="form-group">
-                        <label>المادة / التخصص</label>
-                        <input type="text" id="subject" placeholder="مثال: لغة عربية، رياضيات...">
-                    </div>
-                    <div class="form-group">
-                        <label>رقم التليفون *</label>
-                        <input type="tel" id="phone" placeholder="مثال: 01012345678">
-                    </div>
-                    <div class="form-group full-width">
-                        <label>العنوان السكني</label>
-                        <input type="text" id="address" placeholder="أدخل المحافظة / المركز / المدينة">
-                    </div>
-                    <div class="form-group">
-                        <label>المؤهل الدراسي</label>
-                        <input type="text" id="qualification" placeholder="مثال: بكالوريوس تربية">
-                    </div>
-                    <div class="form-group">
-                        <label>تاريخ التعيين الأول</label>
-                        <input type="date" id="hireDate">
-                    </div>
-                    <div class="form-group checkbox-group full-width">
-                        <input type="checkbox" id="covered">
-                        <label for="covered">مشمول بقانون الكادر</label>
-                    </div>
-                </div>
-                <div class="form-group" style="margin-top: 20px;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;">💾 حفظ البيانات</button>
-                </div>
-            </form>
-        </div>
+        <div class="stats-count" id="recordCount">إجمالي السجلات: 0</div>
     </div>
 
     <script>
-        const SYSTEM_PASSWORD = "2608";
-
-        const initialEmployees = [
-            {id:1, nationalId:"28501011800111", name:"إبراهيم عبد الرازق عبد الوحيد", job:"معلم بالحصة", currentJobDate:"2022-10-01", subject:"كيمياء", phone:"01012345671", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس علوم وتربية", hireDate:"2022-10-01", covered:false},
-            {id:2, nationalId:"27805121800222", name:"أحمد أيوب محمود الحناوى", job:"معلم أول أ", currentJobDate:"2018-07-01", subject:"فلسفة ومنطق", phone:"01112345672", address:"البحيرة - كفر الدوار", qualification:"ليسانس آداب وتربية", hireDate:"2005-03-15", covered:true},
-            {id:3, nationalId:"28109201800333", name:"أحمد شحاتة محمود يوسف", job:"معلم أول", currentJobDate:"2019-01-01", subject:"فيزياء", phone:"01212345673", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس علوم وتربية", hireDate:"2010-09-01", covered:true},
-            {id:4, nationalId:"29203151800444", name:"أحمد عبدالستار عبدالسلام الشريف", job:"معلم بالحصة", currentJobDate:"2023-10-15", subject:"لغة عربية ودين", phone:"01098765432", address:"البحيرة - دمنهور", qualification:"ليسانس دار العلوم", hireDate:"2023-10-15", covered:false},
-            {id:5, nationalId:"27201011800555", name:"أحمد متولى محمد خاطر", job:"معلم خبير", currentJobDate:"2015-11-01", subject:"لغة عربية ودين", phone:"01512345675", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1998-09-01", covered:true},
-            {id:6, nationalId:"28311051800666", name:"أحمد محمد محمد على", job:"معلم أول", currentJobDate:"2017-03-01", subject:"فلسفة ومنطق", phone:"01011223344", address:"البحيرة - كفر الدوار", qualification:"ليسانس تربية", hireDate:"2009-03-01", covered:true},
-            {id:7, nationalId:"27504101800777", name:"اسامه ابراهيم عبد الحسيب عبد الحميد", job:"معلم خبير", currentJobDate:"2016-09-01", subject:"لغة فرنسية", phone:"01122334455", address:"البحيرة - دمنهور", qualification:"ليسانس ألسن وتربية", hireDate:"2000-10-01", covered:true},
-            {id:8, nationalId:"28208121800888", name:"اسامه النوبى عبدالرازق عبدالحليم", job:"معلم أول", currentJobDate:"2018-09-01", subject:"لغة إنجليزية", phone:"01233445566", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"2008-09-01", covered:true},
-            {id:9, nationalId:"28002021800999", name:"السيد عبدربه محمود محمد", job:"معلم أول", currentJobDate:"2017-05-01", subject:"رياضيات", phone:"01044556677", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس تربية رياضية/علوم", hireDate:"2007-03-01", covered:true},
-            {id:10, nationalId:"28606061801010", name:"الصافى فرج ابراهيم عبدالعال", job:"أمين معمل", currentJobDate:"2012-05-01", subject:"بدون", phone:"01155667788", address:"البحيرة - معمل القزاز", qualification:"دبلوم فني", hireDate:"2012-05-01", covered:false},
-            {id:11, nationalId:"26801011801111", name:"امال احمد شوقى ابراهيم بيومى", job:"كبير معلمين", currentJobDate:"2014-09-01", subject:"حاسب آلي متفرغ", phone:"01266778899", address:"البحيرة - دمنهور", qualification:"بكالوريوس حاسبات وتربية", hireDate:"1994-09-01", covered:true},
-            {id:12, nationalId:"27303031801212", name:"ايمان سعيد على مصطفى", job:"أمين مكتبة خبير", currentJobDate:"2015-10-01", subject:"بدون", phone:"01077889900", address:"البحيرة - كفر الدوار", qualification:"ليسانس مكتبات ومعلومات", hireDate:"1997-10-01", covered:true},
-            {id:13, nationalId:"27907071801313", name:"ايمان عياد امجد بركات", job:"معلم أول أ", currentJobDate:"2019-03-01", subject:"أحياء", phone:"01188990011", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس علوم وتربية", hireDate:"2004-03-01", covered:true},
-            {id:14, nationalId:"27405051801414", name:"ايناس عبد الخالق محروس على", job:"معلم خبير", currentJobDate:"2016-09-01", subject:"اقتصاد منزلي", phone:"01299001122", address:"البحيرة - دمنهور", qualification:"بكالوريوس اقتصاد منزلي", hireDate:"1999-09-01", covered:true},
-            {id:15, nationalId:"29101011801515", name:"جهاد سعداوى سعد حسنين", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"فيزياء", phone:"01000112233", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس علوم", hireDate:"2023-10-01", covered:false},
-            {id:16, nationalId:"26902021801616", name:"حامد محمود رمضان قيقى", job:"كبير معلمين", currentJobDate:"2013-09-01", subject:"جغرافيا", phone:"01111223344", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1993-09-01", covered:true},
-            {id:17, nationalId:"26704041801717", name:"حسام الدين ابراهيم عبد اللطيف ابو الخير", job:"كبير معلمين", currentJobDate:"2012-10-01", subject:"لغة عربية ودين", phone:"01222334455", address:"البحيرة - دمنهور", qualification:"ليسانس تربية", hireDate:"1992-10-01", covered:true},
-            {id:18, nationalId:"28708081801818", name:"حسن رجب جمعه على", job:"أمين معمل", currentJobDate:"2014-01-15", subject:"بدون", phone:"01033445566", address:"البحيرة - معمل القزاز", qualification:"دبلوم فني فوق متوسط", hireDate:"2014-01-15", covered:false},
-            {id:19, nationalId:"27709091801919", name:"حسنى فؤاد محمد الششتاوى", job:"معلم أول أ", currentJobDate:"2018-09-01", subject:"حاسب آلي متفرغ", phone:"01144556677", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس نوعية", hireDate:"2003-09-01", covered:true},
-            {id:20, nationalId:"27010101802020", name:"خالد محمد محمود عبد الحميد", job:"كبير أخصائيين اجتماعيين - وكيل مدرسة", currentJobDate:"2015-09-01", subject:"بدون", phone:"01255667788", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس خدمة إجتماعية", hireDate:"1995-09-01", covered:true},
-            {id:21, nationalId:"27611111802121", name:"خيرى محمد شعبان عبدالله", job:"معلم خبير", currentJobDate:"2017-10-01", subject:"لغة إنجليزية", phone:"01066778899", address:"البحيرة - دمنهور", qualification:"ليسانس آداب وتربية", hireDate:"2001-10-01", covered:true},
-            {id:22, nationalId:"27812121802222", name:"رحاب السيد محمد اللقانى", job:"معلم أول أ", currentJobDate:"2019-09-01", subject:"مجال صناعي", phone:"01177889900", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس تربية نوعية", hireDate:"2004-09-01", covered:true},
-            {id:23, nationalId:"28301011802323", name:"رشا سعيد عبده رسلان", job:"معلم أول", currentJobDate:"2020-03-01", subject:"لغة إنجليزية", phone:"01288990011", address:"البحيرة - معمل القزاز", qualification:"ليسانس ألسن", hireDate:"2010-03-01", covered:true},
-            {id:24, nationalId:"27502021802424", name:"رشا محمد عبد الفتاح محمود صقر", job:"معلم خبير", currentJobDate:"2016-09-01", subject:"مجال زراعي", phone:"01099001122", address:"البحيرة - دمنهور", qualification:"بكالوريوس زراعة وتربية", hireDate:"2000-09-01", covered:true},
-            {id:25, nationalId:"26803031802525", name:"سامى احمد سعد محمود", job:"كبير معلمين", currentJobDate:"2013-10-01", subject:"حاسب آلي متفرغ", phone:"01100112233", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية", hireDate:"1993-10-01", covered:true},
-            {id:26, nationalId:"26904041802626", name:"سامى عبد النبى السيد بدوى", job:"كبير معلمين", currentJobDate:"2014-09-01", subject:"رياضيات", phone:"01211223344", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس علوم وتربية", hireDate:"1994-09-01", covered:true},
-            {id:27, nationalId:"27305051802727", name:"سعيد عبد اللطيف محمد سعيد", job:"معلم خبير", currentJobDate:"2015-10-01", subject:"لغة عربية ودين", phone:"01022334455", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1998-10-01", covered:true},
-            {id:28, nationalId:"28006061802828", name:"سماح ممدوح رزق حسن هيبه", job:"معلم أول أ", currentJobDate:"2020-09-01", subject:"كيمياء", phone:"01133445566", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم وتربية", hireDate:"2005-09-01", covered:true},
-            {id:29, nationalId:"28207071802929", name:"سنيه سالم على سالم", job:"معلم أول", currentJobDate:"2019-03-01", subject:"مجال صناعي", phone:"01244556677", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية نوعية", hireDate:"2009-03-01", covered:true},
-            {id:30, nationalId:"27408081803030", name:"شرين رشاد على عبد الفتاح عبد الحليم", job:"معلم خبير", currentJobDate:"2015-10-01", subject:"اقتصاد منزلي", phone:"01055667788", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس اقتصاد منزلي", hireDate:"1999-10-01", covered:true},
-            {id:31, nationalId:"28109091803131", name:"شوقى محمد محمود عامر", job:"معلم أول", currentJobDate:"2018-09-01", subject:"لغة فرنسية", phone:"01166778899", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"2008-09-01", covered:true},
-            {id:32, nationalId:"28910101803232", name:"شيماء احمد على عبدالحليم", job:"فنى رابع تعليم", currentJobDate:"2015-09-01", subject:"نشاط", phone:"01277889900", address:"البحيرة - دمنهور", qualification:"دبلوم ثانوي تجاري", hireDate:"2015-09-01", covered:false},
-            {id:33, nationalId:"28311111803333", name:"صابر شريف طاهر مصطفى", job:"معلم أول", currentJobDate:"2020-10-01", subject:"لغة عربية ودين", phone:"01088990011", address:"البحيرة - معمل القزاز", qualification:"ليسانس دار العلوم وتربية", hireDate:"2010-10-01", covered:true},
-            {id:34, nationalId:"26712121803434", name:"صالح احمد محمود دبل", job:"كبير معلمين", currentJobDate:"2011-09-01", subject:"كيمياء", phone:"01199001122", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس علوم وتربية", hireDate:"1991-09-01", covered:true},
-            {id:35, nationalId:"27701011803535", name:"صبحي رمضان معوض عبد الله", job:"معلم أول أ", currentJobDate:"2018-03-01", subject:"فلسفة ومنطق", phone:"01200112233", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"2003-03-01", covered:true},
-            {id:36, nationalId:"29302021803636", name:"عادل محسن محمد محمود صبره", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"رياضيات", phone:"01011223355", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم", hireDate:"2023-10-01", covered:false},
-            {id:37, nationalId:"27903031803737", name:"عايده جمال أمين مرعى", job:"معلم أول أ", currentJobDate:"2019-09-01", subject:"فلسفة ومنطق", phone:"01122334466", address:"البحيرة - كفر الدوار", qualification:"ليسانس تربية", hireDate:"2004-09-01", covered:true},
-            {id:38, nationalId:"27204041803838", name:"عبد المؤمن عبد اللطيف محمد سعيد", job:"معلم خبير", currentJobDate:"2013-09-01", subject:"لغة إنجليزية", phone:"01233445577", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1997-09-01", covered:true},
-            {id:39, nationalId:"28205051803939", name:"عبدالرحمن حسنين توفيق حسنين", job:"معلم أول", currentJobDate:"2019-09-01", subject:"لغة فرنسية", phone:"01044556688", address:"البحيرة - دمنهور", qualification:"ليسانس ألسن وتربية", hireDate:"2009-09-01", covered:true},
-            {id:40, nationalId:"28106061804040", name:"عبده مسعود السيد محمد", job:"معلم أول", currentJobDate:"2018-03-01", subject:"رياضيات", phone:"01155667799", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية", hireDate:"2008-03-01", covered:true},
-            {id:41, nationalId:"27007071804141", name:"علاء الدين محمد عبد الرازق رشدان", job:"كبير أخصائيين اجتماعيين", currentJobDate:"2014-10-01", subject:"بدون", phone:"01266778800", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس خدمة إجتماعية", hireDate:"1994-10-01", covered:true},
-            {id:42, nationalId:"27608081804242", name:"عماد عبدالجيد عبدالحفيظ محمد", job:"معلم أول أ - مدير مدرسة", currentJobDate:"2017-09-01", subject:"لغة عربية ودين", phone:"01077889911", address:"البحيرة - معمل القزاز", qualification:"ليسانس تربية ودبلوم إدارة", hireDate:"2002-09-01", covered:true},
-            {id:43, nationalId:"27809091804343", name:"فاطمه جمعه رزق شهاوى الديب", job:"معلم أول أ", currentJobDate:"2018-10-01", subject:"لغة إنجليزية", phone:"01188990022", address:"البحيرة - دمنهور", qualification:"ليسانس آداب وتربية", hireDate:"2003-10-01", covered:true},
-            {id:44, nationalId:"27310101804444", name:"فتحى ابراهيم السيد قادوم", job:"معلم خبير", currentJobDate:"2014-09-01", subject:"لغة إنجليزية", phone:"01299001133", address:"البحيرة - كفر الدوار", qualification:"ليسانس تربية", hireDate:"1998-09-01", covered:true},
-            {id:45, nationalId:"26911111804545", name:"ليلى محمد عبده بسيوني", job:"كبير معلمين", currentJobDate:"2013-09-01", subject:"جغرافيا", phone:"01000112244", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1993-09-01", covered:true},
-            {id:46, nationalId:"28312121804646", name:"محمد ابراهيم محمد جمعة", job:"معلم أول", currentJobDate:"2020-03-01", subject:"لغة فرنسية", phone:"01111223355", address:"البحيرة - دمنهور", qualification:"ليسانس آداب وتربية", hireDate:"2010-03-01", covered:true},
-            {id:47, nationalId:"27701011804747", name:"محمد شحاته مكرم على", job:"معلم أول أ", currentJobDate:"2018-09-01", subject:"دراسات اجتماعية", phone:"01222334466", address:"البحيرة - معمل القزاز", qualification:"ليسانس تربية", hireDate:"2003-09-01", covered:true},
-            {id:48, nationalId:"28802021804848", name:"محمد صبرى كامل مرسى غنيم", job:"معلم", currentJobDate:"2021-09-01", subject:"لغة عربية ودين", phone:"01033445577", address:"البحيرة - كفر الدوار", qualification:"ليسانس دار العلوم وتربية", hireDate:"2016-09-01", covered:true},
-            {id:49, nationalId:"27403031804949", name:"محمد عبد العزيز ابو سريع محمد", job:"معلم خبير", currentJobDate:"2015-09-01", subject:"مجال صناعي", phone:"01144556688", address:"البحيرة - دمنهور", qualification:"بكالوريوس تربية نوعية", hireDate:"1999-09-01", covered:true},
-            {id:50, nationalId:"27304041805050", name:"محمد عبد العظيم احمد السيد", job:"معلم خبير", currentJobDate:"2014-09-01", subject:"رياضيات", phone:"01255667799", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس علوم وتربية", hireDate:"1998-09-01", covered:true},
-            {id:51, nationalId:"28505051805151", name:"محمد عبدالوهاب عبدالجليل القزاز", job:"أخصائي نفسي", currentJobDate:"2016-10-01", subject:"إرشاد نفسي", phone:"01066778800", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية قسم إرشاد نفسي", hireDate:"2012-10-01", covered:true},
-            {id:52, nationalId:"29406061805252", name:"محمود احمد ابو بكر عبد العزيز", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"رياضيات", phone:"01177889911", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم", hireDate:"2023-10-01", covered:false},
-            {id:53, nationalId:"28207071805353", name:"محمود السيد محمد عبدالغنى", job:"معلم أول", currentJobDate:"2019-09-01", subject:"دراسات اجتماعية", phone:"01288990022", address:"البحيرة - كفر الدوار", qualification:"ليسانس آداب وتربية", hireDate:"2009-09-01", covered:true},
-            {id:54, nationalId:"26808081805454", name:"محمود حسن على حسن", job:"كبير معلمين", currentJobDate:"2012-09-01", subject:"لغة عربية ودين", phone:"01099001133", address:"البحيرة - معمل القزاز", qualification:"ليسانس تربية", hireDate:"1992-09-01", covered:true},
-            {id:55, nationalId:"28309091805555", name:"محمود خميس على على", job:"معلم أول", currentJobDate:"2020-03-01", subject:"رياضيات", phone:"01100112244", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم وتربية", hireDate:"2010-03-01", covered:true},
-            {id:56, nationalId:"28810101805656", name:"محمود رياض محمود مصطفى محيسن", job:"فنى ثالث", currentJobDate:"2014-05-01", subject:"بدون", phone:"01211223355", address:"البحيرة - معمل القزاز", qualification:"دبلوم فني صناعي", hireDate:"2014-05-01", covered:false},
-            {id:57, nationalId:"29311111805757", name:"محمود عادل علي بسيوني", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"لغة عربية ودين", phone:"01022334466", address:"البحيرة - كفر الدوار", qualification:"ليسانس آداب", hireDate:"2023-10-01", covered:false},
-            {id:58, nationalId:"26712121805858", name:"مدحت سعيد حسنين حجاج", job:"كبير معلمين", currentJobDate:"2011-10-01", subject:"لغة عربية ودين", phone:"01133445577", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1991-10-01", covered:true},
-            {id:59, nationalId:"27501011805959", name:"مروه محمد مصطفى عبد التواب", job:"معلم خبير", currentJobDate:"2016-09-01", subject:"تربية فنية", phone:"01244556688", address:"البحيرة - دمنهور", qualification:"بكالوريوس تربية فنية", hireDate:"2000-09-01", covered:true},
-            {id:60, nationalId:"26802021806060", name:"مصطفى محمد ابراهيم صقر", job:"كبير معلمين", currentJobDate:"2013-09-01", subject:"لغة عربية ودين", phone:"01055667799", address:"البحيرة - كفر الدوار", qualification:"ليسانس تربية", hireDate:"1993-09-01", covered:true},
-            {id:61, nationalId:"26903031806161", name:"مصطفى محمود كامل الصباغ", job:"كبير معلمين", currentJobDate:"2014-10-01", subject:"لغة عربية ودين", phone:"01166778800", address:"البحيرة - معمل القزاز", qualification:"ليسانس آداب وتربية", hireDate:"1994-10-01", covered:true},
-            {id:62, nationalId:"29504041806262", name:"منار فرج خميس فرج", job:"معلم بالحصة", currentJobDate:"2024-01-15", subject:"علوم متكاملة", phone:"01277889911", address:"البحيرة - دمنهور", qualification:"بكالوريوس علوم", hireDate:"2024-01-15", covered:false},
-            {id:63, nationalId:"28205051806363", name:"مها صالح محمد عيد صالح", job:"معلم أول", currentJobDate:"2019-09-01", subject:"فلسفة ومنطق", phone:"01088990022", address:"البحيرة - كفر الدوار", qualification:"ليسانس آداب وتربية", hireDate:"2009-09-01", covered:true},
-            {id:64, nationalId:"28006061806464", name:"مها محمد محمود القرنشاوى", job:"أخصائي اجتماعي أول", currentJobDate:"2016-03-01", subject:"بدون", phone:"01199001133", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس خدمة إجتماعية", hireDate:"2006-03-01", covered:true},
-            {id:65, nationalId:"28307071806565", name:"هبه احمد حسن رمضان", job:"معلم أول", currentJobDate:"2020-09-01", subject:"تربية فنية", phone:"01200112244", address:"البحيرة - دمنهور", qualification:"بكالوريوس تربية نوعية", hireDate:"2010-09-01", covered:true},
-            {id:66, nationalId:"27808081806666", name:"هبه احمد عبد الفتاح مصطفى التراس", job:"معلم أول أ", currentJobDate:"2019-09-01", subject:"تربية رياضية", phone:"01011223366", address:"البحيرة - معمل القزاز", qualification:"بكالوريوس تربية رياضية", hireDate:"2004-09-01", covered:true},
-            {id:67, nationalId:"29409091806767", name:"هدى خبيري ابراهيم ابراهيم", job:"معلم بالحصة", currentJobDate:"2023-10-01", subject:"فيزياء", phone:"01122334477", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس علوم", hireDate:"2023-10-01", covered:false},
-            {id:68, nationalId:"28110101806868", name:"وائل رشاد سعيد محمد", job:"معلم أول", currentJobDate:"2018-09-01", subject:"علم نفس واجتماع", phone:"01233445588", address:"البحيرة - دمنهور", qualification:"ليسانس آداب وتربية", hireDate:"2008-09-01", covered:true},
-            {id:69, nationalId:"27511111806969", name:"وليد حسين على على زيد", job:"معلم خبير", currentJobDate:"2016-10-01", subject:"لغة فرنسية", phone:"01044556699", address:"البحيرة - معمل القزاز", qualification:"ليسانس ألسن وتربية", hireDate:"2000-10-01", covered:true},
-            {id:70, nationalId:"26712121807070", name:"ياسر زغلول السنوسى بلبع", job:"كبير معلمين", currentJobDate:"2012-09-01", subject:"تربية رياضية", phone:"01155667700", address:"البحيرة - كفر الدوار", qualification:"بكالوريوس تربية رياضية", hireDate:"1992-09-01", covered:true},
-            {id:71, nationalId:"28201011807171", name:"يسرا محمد عبدالله متولى ابو يوسف", job:"معلم أول", currentJobDate:"2019-09-01", subject:"لغة عربية ودين", phone:"01266778811", address:"البحيرة - دمنهور", qualification:"ليسانس دار العلوم وتربية", hireDate:"2009-09-01", covered:true}
+        // المصفوفة الكاملة لبيانات 69 معلم وإداري
+        const staffData = [
+          { id: 1, code: "3470613", nationalId: "30009281800215", name: "ابراهيم عبد الرازق عبد الونيس منبي خليف", subject: "كيمياء", appointmentDate: "-", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 2, code: "478529", nationalId: "27905281801419", name: "احمد ايوب محمود الحناوي", subject: "الفلسفة والمنطق", appointmentDate: "2011-07-20", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", cadreTitle: "معلم أول أ" },
+          { id: 3, code: "2489162", nationalId: "28310201803351", name: "أحمد شحاته محمود يوسف", subject: "فيزياء", appointmentDate: "2014-03-30", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", cadreTitle: "معلم أول" },
+          { id: 4, code: "3539514", nationalId: "29002281801696", name: "احمد عبد الستار عبد السلام الشريف", subject: "لغة عربية ودين", appointmentDate: "-", jobTitle: "معلم بالحصه", qualification: "ليسانس دار العلوم", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 5, code: "446024", nationalId: "27903031803511", name: "احمد متولى محمد خاطر", subject: "لغة عربية ودين", appointmentDate: "2002-05-01", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم خبير" },
+          { id: 6, code: "478300", nationalId: "27202070103293", name: "أحمد مختار زكريا محمد", subject: "رياضيات", appointmentDate: "1994-10-13", jobTitle: "معلم أول أ", qualification: "بكالوريوس علوم", cadreTitle: "معلم أول أ" },
+          { id: 7, code: "478700", nationalId: "27906271802014", name: "اسامه ابراهيم عبد الحسيب عبد الحميد", subject: "لغة فرنسية", appointmentDate: "2002-05-01", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم خبير" },
+          { id: 8, code: "2514068", nationalId: "28109132700939", name: "اسامه النوبي عبد الرازق عبد الحليم", subject: "لغة إنجليزية", appointmentDate: "2014-03-30", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم أول" },
+          { id: 9, code: "2761591", nationalId: "28501011839759", name: "السيد عبدربه محمود محمد", subject: "رياضيات", appointmentDate: "2014-03-30", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", cadreTitle: "معلم أول" },
+          { id: 10, code: "2785697", nationalId: "27912201804893", name: "الصافى فرج ابراهيم عبد العال", subject: "خدمات أمانة معمل", appointmentDate: "2022-03-13", jobTitle: "أمين معمل", qualification: "محو أميه", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 11, code: "3043115", nationalId: "28907171803587", name: "امل اسماعيل عبد الموجود السيد", subject: "صحافة وإعلام", appointmentDate: "2018-01-18", jobTitle: "أخصائي صحافة واعلام أول", qualification: "ليسانس دراسات اسلامية", cadreTitle: "أخصائي صحافة واعلام أول" },
+          { id: 12, code: "478699", nationalId: "27704051802607", name: "ایمان سعيد على مصطفى", subject: "مكتبات", appointmentDate: "2004-07-01", jobTitle: "أمين مكتبة خبير", qualification: "ليسانس اداب وحاصل على برنامج التأهيل التربوي", cadreTitle: "أمين مكتبة خبير" },
+          { id: 13, code: "478208", nationalId: "28107131802328", name: "ايمان عياد امجد بركات", subject: "احياء", appointmentDate: "2011-03-28", jobTitle: "معلم أول أ", qualification: "بكالوريوس علوم وتربية", cadreTitle: "معلم أول أ" },
+          { id: 14, code: "478530", nationalId: "27909071801225", name: "ايناس عبد الخالق محروس على", subject: "اقتصاد منزلي", appointmentDate: "2002-05-01", jobTitle: "معلم خبير", qualification: "بكالوريوس تربية نوعية", cadreTitle: "معلم خبير" },
+          { id: 15, code: "3470654", nationalId: "29605021800064", name: "جهاد سعداوي سعد حسنين", subject: "فيزياء", appointmentDate: "-", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 16, code: "478695", nationalId: "27012071802795", name: "حامد محمود رمضان قیقی", subject: "جغرافيا", appointmentDate: "1994-10-13", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", cadreTitle: "كبير معلمين" },
+          { id: 17, code: "478533", nationalId: "27202201802877", name: "حسام الدين ابراهيم عبد اللطيف ابو الخير", subject: "لغة عربية ودين", appointmentDate: "1994-09-01", jobTitle: "كبير معلمين", qualification: "ليسانس اداب وتربية", cadreTitle: "كبير معلمين" },
+          { id: 18, code: "2785683", nationalId: "28302121804257", name: "حسن رجب جمعه على", subject: "خدمات أمانة معمل", appointmentDate: "2023-05-29", jobTitle: "أمين معمل", qualification: "محو أميه", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 19, code: "2183609", nationalId: "27901161803757", name: "حسنى فؤاد محمد الششتاوى", subject: "حاسب آلى متفرغ", appointmentDate: "2011-03-28", jobTitle: "معلم أول أ", qualification: "دبلوم خاص في التربية", cadreTitle: "معلم أول أ" },
+          { id: 20, code: "478691", nationalId: "28001061805151", name: "خيرى محمد شعبان عبد الله", subject: "لغة إنجليزية", appointmentDate: "2002-05-01", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم خبير" },
+          { id: 21, code: "478593", nationalId: "27402011803361", name: "رحاب السيد محمد اللقاني", subject: "مجال صناعی", appointmentDate: "2011-07-20", jobTitle: "معلم أول أ", qualification: "بكالوريوس تربية", cadreTitle: "معلم أول أ" },
+          { id: 22, code: "2763470", nationalId: "28606231803042", name: "رشا سعيد عبده رسلان", subject: "لغة إنجليزية", appointmentDate: "2014-03-30", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم أول" },
+          { id: 23, code: "478268", nationalId: "28102160201307", name: "رشا محمد عبد الفتاح محمود صقر", subject: "مجال زراعی", appointmentDate: "2002-05-15", jobTitle: "معلم خبير", qualification: "بكالوريوس الزراعة", cadreTitle: "معلم خبير" },
+          { id: 24, code: "478583", nationalId: "26906051801773", name: "سامی احمد سعد محمود", subject: "حاسب آلى متفرغ", appointmentDate: "1997-11-18", jobTitle: "كبير معلمين", qualification: "بكالوريوس تجارة وحاصل على برنامج التأهيل التربوي", cadreTitle: "كبير معلمين" },
+          { id: 25, code: "478689", nationalId: "27804201802354", name: "سعيد عبد اللطيف محمد سعيد", subject: "لغة عربية ودين", appointmentDate: "2000-10-30", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم خبير" },
+          { id: 26, code: "476165", nationalId: "28205131801544", name: "سماح ممدوح رزق حسن هيبه", subject: "كيمياء", appointmentDate: "2011-03-28", jobTitle: "معلم أول أ", qualification: "بكالوريوس علوم وتربية", cadreTitle: "معلم أول أ" },
+          { id: 27, code: "2776680", nationalId: "27611061803522", name: "سنيه سالم على سالم", subject: "مجال صناعی", appointmentDate: "2014-09-23", jobTitle: "معلم أول", qualification: "بكالوريوس هندسة وحاصل على دبلومة تربوية", cadreTitle: "معلم أول" },
+          { id: 28, code: "478327", nationalId: "27908021801848", name: "شرين رشاد على عبد الفتاح عبد الحليم", subject: "اقتصاد منزلي", appointmentDate: "2001-07-11", jobTitle: "معلم خبير", qualification: "بكالوريوس تربية نوعية", cadreTitle: "معلم خبير" },
+          { id: 29, code: "2621673", nationalId: "27809281800031", name: "شوقى محمد محمود عامر", subject: "لغة فرنسية", appointmentDate: "2015-06-10", jobTitle: "معلم أول", qualification: "ليسانس اداب", cadreTitle: "معلم أول" },
+          { id: 30, code: "2535327", nationalId: "28906041801861", name: "شيماء احمد على عبد الحليم", subject: "شؤون تعليم ورعاية", appointmentDate: "2011-07-04", jobTitle: "فنى رابع تعليم / نشاط / خدمات", qualification: "دبلوم صناعة ثانوى", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 31, code: "3005746", nationalId: "29205061800417", name: "صابر شريف طاهر مصطفى", subject: "لغة عربية ودين", appointmentDate: "2017-09-12", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم أول" },
+          { id: 32, code: "392326", nationalId: "26810191801971", name: "صالح احمد محمود دبل", subject: "كيمياء", appointmentDate: "1990-11-03", jobTitle: "كبير معلمين", qualification: "بكالوريوس علوم وتربية", cadreTitle: "كبير معلمين" },
+          { id: 33, code: "475029", nationalId: "28104261802177", name: "صبحى رمضان معوض عبد الله", subject: "الفلسفة والمنطق", appointmentDate: "2011-03-28", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", cadreTitle: "معلم أول أ" },
+          { id: 34, code: "3539508", nationalId: "28908101804795", name: "عادل محسن محمد محمود صبره", subject: "رياضيات", appointmentDate: "-", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 35, code: "2499913", nationalId: "28011111802553", name: "عاشور محمد محمد اسماعيل", subject: "لغة فرنسية", appointmentDate: "2014-03-30", jobTitle: "معلم أول - وكيل مدرسة", qualification: "بكالوريوس تربية", cadreTitle: "معلم أول - وكيل مدرسة" },
+          { id: 36, code: "478743", nationalId: "27712051801701", name: "عايده جمال امین مرعی", subject: "الفلسفة والمنطق", appointmentDate: "2011-03-28", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", cadreTitle: "معلم أول أ" },
+          { id: 37, code: "478690", nationalId: "28001261802254", name: "عبد المؤمن عبد اللطيف محمد سعيد", subject: "لغة إنجليزية", appointmentDate: "2004-07-01", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم خبير" },
+          { id: 38, code: "2763484", nationalId: "28702011813739", name: "عبده مسعود السيد محمد", subject: "رياضيات", appointmentDate: "2014-03-30", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", cadreTitle: "معلم أول" },
+          { id: 39, code: "478343", nationalId: "26711081802094", name: "علاء الدين محمد عبد الرازق رشدان", subject: "تربية اجتماعية", appointmentDate: "1995-08-01", jobTitle: "كبير أخصائيين اجتماعيين", qualification: "ليسانس اداب وحاصل على برنامج التأهيل التربوي", cadreTitle: "كبير أخصائيين اجتماعيين" },
+          { id: 40, code: "2191649", nationalId: "28302081804275", name: "عماد عبد الجيد عبد الحفيظ محمد", subject: "لغة عربية ودين", appointmentDate: "2011-03-28", jobTitle: "معلم أول أ - مدير مدرسة", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم أول أ - مدير مدرسة" },
+          { id: 41, code: "478677", nationalId: "27512011804414", name: "فتحى ابراهيم السيد قادوم", subject: "لغة انجليزية", appointmentDate: "2000-09-16", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم خبير" },
+          { id: 42, code: "444292", nationalId: "26902061802128", name: "ليلي محمد عبده بسيوني", subject: "جغرافيا", appointmentDate: "1994-10-13", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", cadreTitle: "كبير معلمين" },
+          { id: 43, code: "2630440", nationalId: "28409061800558", name: "محمد ابراهيم محمد جمعة", subject: "لغة فرنسية", appointmentDate: "2015-06-10", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم أول" },
+          { id: 44, code: "2911702", nationalId: "27907271800816", name: "محمد حسن على البليهي", subject: "خدمات معاونة", appointmentDate: "2011-03-05", jobTitle: "عامل خدمات", qualification: "محو أميه", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 45, code: "478737", nationalId: "28304051805351", name: "محمد شحاته مكرم على", subject: "دراسات اجتماعية", appointmentDate: "2011-03-28", jobTitle: "معلم أول أ", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم أول أ" },
+          { id: 46, code: "2211897", nationalId: "28408211802175", name: "محمد صبرى كامل مرسى غنیم", subject: "لغة عربية ودين", appointmentDate: "2011-03-28", jobTitle: "معلم", qualification: "ماجستير في التربية", cadreTitle: "معلم" },
+          { id: 47, code: "478694", nationalId: "28004031802611", name: "محمد عبد العزيز ابو سريع محمد", subject: "مجال صناعی", appointmentDate: "2004-07-01", jobTitle: "معلم خبير", qualification: "بكالوريوس علوم وتربية", cadreTitle: "معلم خبير" },
+          { id: 48, code: "2027238", nationalId: "27804151803753", name: "محمد عبد العظيم احمد السيد", subject: "رياضيات", appointmentDate: "2002-05-01", jobTitle: "معلم خبير", qualification: "بكالوريوس علوم وتربية", cadreTitle: "معلم خبير" },
+          { id: 49, code: "2480188", nationalId: "28410021802475", name: "محمد عبد الوهاب عبد الجليل القزاز", subject: "تربية نفسية", appointmentDate: "2019-10-03", jobTitle: "أخصائي نفسي", qualification: "بكالوريوس علوم وتربية", cadreTitle: "أخصائي نفسي" },
+          { id: 50, code: "3470691", nationalId: "29806011813414", name: "محمود احمد ابو بكر عبد العزيز", subject: "رياضيات", appointmentDate: "-", jobTitle: "معلم بالحصه", qualification: "دبلوم معهد السكرتارية", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 51, code: "2776641", nationalId: "28603131802252", name: "محمود السيد محمد عبد الغنى", subject: "دراسات إجتماعية", appointmentDate: "2014-03-30", jobTitle: "معلم أول", qualification: "ليسانس اداب وحاصل على دبلومة تربوية", cadreTitle: "معلم أول" },
+          { id: 52, code: "478655", nationalId: "27005141802171", name: "محمود حسن على حسن", subject: "لغة عربية ودين", appointmentDate: "1992-09-01", jobTitle: "كبير معلمين", qualification: "ليسانس اداب وتربية", cadreTitle: "كبير معلمين" },
+          { id: 53, code: "2160875", nationalId: "28504101802713", name: "محمود خميس على على", subject: "رياضيات", appointmentDate: "2011-03-28", jobTitle: "معلم أول", qualification: "بكالوريوس علوم وتربية", cadreTitle: "معلم أول" },
+          { id: 54, code: "2279698", nationalId: "28402081803117", name: "محمود رياض محمود مصطفى محيسن", subject: "شؤون فنية", appointmentDate: "2004-10-01", jobTitle: "فنى ثالث", qualification: "دبلوم صناعة ثانوى", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 55, code: "3482475", nationalId: "29301231803059", name: "محمود عادل علي بسيوني", subject: "لغة عربية ودين", appointmentDate: "-", jobTitle: "معلم بالحصه", qualification: "ليسانس شريعة وقانون - وحاصل على برنامج التأهيل التربوي", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 56, code: "478678", nationalId: "27101211802173", name: "مدحت سعيد حسنين حجاج", subject: "لغة عربية ودين", appointmentDate: "1994-10-13", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", cadreTitle: "كبير معلمين" },
+          { id: 57, code: "478645", nationalId: "28301101804904", name: "مروه محمد مصطفى عبد التواب", subject: "تربية فنية", appointmentDate: "2003-12-17", jobTitle: "معلم خبير", qualification: "بكالوريوس تربية نوعية", cadreTitle: "معلم خبير" },
+          { id: 58, code: "478484", nationalId: "27505031803353", name: "مصطفى محمد ابراهيم صقر", subject: "لغة عربية ودين", appointmentDate: "1997-09-30", jobTitle: "كبير معلمين", qualification: "ليسانس اداب وتربية", cadreTitle: "كبير معلمين" },
+          { id: 59, code: "478663", nationalId: "27101011808673", name: "مصطفى محمود كامل الصباغ", subject: "لغة عربية ودين", appointmentDate: "1996-09-29", jobTitle: "كبير معلمين", qualification: "ليسانس اداب", cadreTitle: "كبير معلمين" },
+          { id: 60, code: "2524185", nationalId: "28209221802065", name: "مها صالح محمد عيد صالح", subject: "الفلسفة والمنطق", appointmentDate: "2014-03-30", jobTitle: "معلم أول", qualification: "ليسانس آداب", cadreTitle: "معلم أول" },
+          { id: 61, code: "2775679", nationalId: "28606141804503", name: "مها محمد محمود القرنشاوى", subject: "تربية اجتماعية", appointmentDate: "2014-03-30", jobTitle: "أخصائي اجتماعي أول", qualification: "بكالوريوس خدمة اجتماعية وحاصل على دبلومة تربوية", cadreTitle: "أخصائي اجتماعي أول" },
+          { id: 62, code: "2016276", nationalId: "26809291801457", name: "ناصر السيد محمد خطاب", subject: "لغة إنجليزية", appointmentDate: "1991-09-01", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم خبير" },
+          { id: 63, code: "2727005", nationalId: "28912121802508", name: "هبه احمد حسن رمضان", subject: "تربية فنية", appointmentDate: "2012-01-22", jobTitle: "معلم أول أ", qualification: "بكالوريوس تربية نوعية", cadreTitle: "معلم أول أ" },
+          { id: 64, code: "2509876", nationalId: "28207171801868", name: "هبه احمد عبد الفتاح مصطفى التراس", subject: "تربية رياضية", appointmentDate: "2012-07-07", jobTitle: "معلم أول أ", qualification: "بكالوريوس تربية رياضية", cadreTitle: "معلم أول أ" },
+          { id: 65, code: "3470741", nationalId: "29501081800748", name: "هدى خبيري ابراهيم ابراهيم", subject: "فيزياء", appointmentDate: "-", jobTitle: "معلم بالحصه", qualification: "بكالوريوس علوم وتربية", cadreTitle: "غير مخاطب حاليا بقانون كادر المعلم" },
+          { id: 66, code: "2512210", nationalId: "28007311801295", name: "وائل رشاد سعید محمد", subject: "علم نفس واجتماع", appointmentDate: "2014-03-30", jobTitle: "معلم أول", qualification: "ليسانس اداب", cadreTitle: "معلم أول" },
+          { id: 67, code: "478576", nationalId: "27811201805198", name: "وليد حسين على على زيد", subject: "لغة فرنسية", appointmentDate: "2004-07-01", jobTitle: "معلم خبير", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم خبير" },
+          { id: 68, code: "475859", nationalId: "27008231801718", name: "ياسر زغلول السنوسي بلبع", subject: "تربية رياضية", appointmentDate: "1993-09-01", jobTitle: "كبير معلمين", qualification: "بكالوريوس تربية رياضية", cadreTitle: "كبير معلمين" },
+          { id: 69, code: "2662532", nationalId: "28310181801969", name: "يسرا محمد عبد الله متولى ابويوسف", subject: "لغة عربية ودين", appointmentDate: "2014-03-30", jobTitle: "معلم أول", qualification: "ليسانس اداب وتربية", cadreTitle: "معلم أول" }
         ];
 
-        let employees = JSON.parse(localStorage.getItem('teachers_v4_71_protected')) || [...initialEmployees];
-        let filteredEmployees = [...employees];
-
-        function protectedAction(callback) {
-            const pwd = prompt("🔒 يرجى إدخال الرقم السري لتأفيذ الإجراء:");
-            if (pwd === SYSTEM_PASSWORD) {
-                callback();
-            } else if (pwd !== null) {
-                alert("❌ الرقم السري غير صحيح! تعذر تنفيذ العملية.");
-            }
-        }
-
-        function calculateNationalIdData() {
-            const nid = document.getElementById('nationalId').value.trim();
-            if (nid.length === 14 && !isNaN(nid)) {
-                const centuryCode = parseInt(nid.substring(0, 1));
-                const yearPrefix = (centuryCode === 2) ? "19" : (centuryCode === 3) ? "20" : "";
-                if (!yearPrefix) return;
-
-                const year = yearPrefix + nid.substring(1, 3);
-                const month = nid.substring(3, 5);
-                const day = nid.substring(5, 7);
-                const birthDate = new Date(`${year}-${month}-${day}`);
-
-                if (!isNaN(birthDate.getTime())) {
-                    const today = new Date();
-                    let age = today.getFullYear() - birthDate.getFullYear();
-                    const m = today.getMonth() - birthDate.getMonth();
-                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                        age--;
-                    }
-                    document.getElementById('age').value = age + " سنة";
-                }
-
-                const genderDigit = parseInt(nid.substring(12, 13));
-                document.getElementById('gender').value = (genderDigit % 2 === 0) ? "أنثى" : "ذكر";
-            } else {
-                document.getElementById('age').value = "";
-                document.getElementById('gender').value = "";
-            }
-        }
-
-        function extractAgeAndGenderFromNID(nid) {
-            if (!nid || nid.length !== 14 || isNaN(nid)) return { age: "-", gender: "-" };
-            const centuryCode = parseInt(nid.substring(0, 1));
-            const yearPrefix = (centuryCode === 2) ? "19" : (centuryCode === 3) ? "20" : "";
-            if (!yearPrefix) return { age: "-", gender: "-" };
-
-            const year = yearPrefix + nid.substring(1, 3);
-            const month = nid.substring(3, 5);
-            const day = nid.substring(5, 7);
-            const birthDate = new Date(`${year}-${month}-${day}`);
+        // تهيئة قائمة التخصصات في الفلتر تلقائياً
+        function initSubjectFilter() {
+            const subjectSelect = document.getElementById('subjectFilter');
+            const subjects = [...new Set(staffData.map(item => item.subject).filter(s => s && s !== "-"))];
             
-            let age = "-";
-            if (!isNaN(birthDate.getTime())) {
-                const today = new Date();
-                age = today.getFullYear() - birthDate.getFullYear();
-                const m = today.getMonth() - birthDate.getMonth();
-                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-                age = age + " سنة";
-            }
-            const genderDigit = parseInt(nid.substring(12, 13));
-            const gender = (genderDigit % 2 === 0) ? "أنثى" : "ذكر";
-            return { age, gender };
-        }
-
-        function saveData() {
-            localStorage.setItem('teachers_v4_71_protected', JSON.stringify(employees));
-        }
-
-        function showSection(section) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-            document.getElementById(section).classList.add('active');
-
-            const activeNav = Array.from(document.querySelectorAll('.nav-link')).find(el => el.getAttribute('onclick').includes(section));
-            if(activeNav) activeNav.classList.add('active');
-
-            if (section === 'dashboard') updateDashboard();
-            if (section === 'employees') { filterEmployees(); populateJobFilter(); }
-        }
-
-        function updateDashboard() {
-            document.getElementById('totalEmployees').textContent = employees.length;
-            let males = 0, females = 0;
-            employees.forEach(e => {
-                const info = extractAgeAndGenderFromNID(e.nationalId);
-                if (info.gender === 'ذكر') males++;
-                else if (info.gender === 'أنثى') females++;
+            subjects.sort().forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = sub;
+                opt.textContent = sub;
+                subjectSelect.appendChild(opt);
             });
-            document.getElementById('maleEmployees').textContent = males;
-            document.getElementById('femaleEmployees').textContent = females;
-            document.getElementById('coveredEmployees').textContent = employees.filter(e => e.covered).length;
         }
 
+        // رسم الجدول بناءً على البيانات المصفاة
         function renderTable(data) {
-            filteredEmployees = data;
-            document.getElementById('resultsCount').textContent = `النتائج: ${data.length}`;
-            let html = '';
-            if (data.length === 0) {
-                html = '<tr><td colspan="14" style="text-align:center; padding: 20px; color:#888;">لا توجد نتائج مطابقة للبحث!</td></tr>';
-            } else {
-                data.forEach((emp) => {
-                    const nidInfo = extractAgeAndGenderFromNID(emp.nationalId);
-                    html += `<tr>
-                        <td><span class="code-badge">#${emp.id}</span></td>
-                        <td><strong>${emp.name}</strong></td>
-                        <td><span style="font-family:monospace;">${emp.nationalId || '-'}</span></td>
-                        <td>${nidInfo.age}</td>
-                        <td>${nidInfo.gender}</td>
-                        <td>${emp.job}</td>
-                        <td>${emp.currentJobDate || '-'}</td>
-                        <td>${emp.subject || '<span style="color:#aaa;">بدون</span>'}</td>
-                        <td>${emp.phone || '-'}</td>
-                        <td>${emp.address || '-'}</td>
-                        <td>${emp.qualification || '-'}</td>
-                        <td>${emp.hireDate || '-'}</td>
-                        <td><span class="badge ${emp.covered ? 'badge-success' : 'badge-danger'}">${emp.covered ? 'مشمول' : 'غير مشمول'}</span></td>
-                        <td>
-                            <button class="btn btn-warning" onclick="protectedAction(() => editEmployee(${emp.id}))">✏️ تعديل</button>
-                            <button class="btn btn-danger" onclick="protectedAction(() => deleteEmployee(${emp.id}))">🗑️ حذف</button>
-                        </td>
-                    </tr>`;
-                });
-            }
-            document.getElementById('employeesTable').innerHTML = html;
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            data.forEach(item => {
+                const row = `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td><strong>${item.name}</strong></td>
+                        <td><span class="badge-code">${item.code}</span></td>
+                        <td><span class="badge-id">${item.nationalId}</span></td>
+                        <td>${item.jobTitle}</td>
+                        <td>${item.subject || '-'}</td>
+                        <td>${item.qualification}</td>
+                        <td>${item.appointmentDate}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+
+            document.getElementById('recordCount').textContent = `إجمالي السجلات المعروضة: ${data.length} من أصل ${staffData.length}`;
         }
 
-        function filterEmployees() {
-            const term = document.getElementById('searchInput').value.toLowerCase().trim();
-            const selectedJob = document.getElementById('jobFilter').value;
+        // دالة الفلترة والبحث اللحظي
+        function filterData() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const selectedSubject = document.getElementById('subjectFilter').value;
 
-            const filtered = employees.filter(e => {
-                const matchesCode = e.id.toString().includes(term);
-                const matchesNationalId = e.nationalId ? e.nationalId.includes(term) : false;
-                const matchesPhone = e.phone ? e.phone.includes(term) : false;
-                const matchesSearch = matchesCode || matchesNationalId || matchesPhone ||
-                                      e.name.toLowerCase().includes(term) || 
-                                      e.job.toLowerCase().includes(term) || 
-                                      (e.address && e.address.toLowerCase().includes(term)) ||
-                                      (e.subject && e.subject.toLowerCase().includes(term)) ||
-                                      (e.qualification && e.qualification.toLowerCase().includes(term));
-                const matchesJob = selectedJob === "" || e.job === selectedJob;
-                return matchesSearch && matchesJob;
+            const filtered = staffData.filter(item => {
+                const matchesQuery = 
+                    item.name.toLowerCase().includes(query) ||
+                    item.code.includes(query) ||
+                    item.nationalId.includes(query) ||
+                    item.jobTitle.toLowerCase().includes(query) ||
+                    (item.subject && item.subject.toLowerCase().includes(query)) ||
+                    item.qualification.toLowerCase().includes(query);
+
+                const matchesSubject = selectedSubject === "" || item.subject === selectedSubject;
+
+                return matchesQuery && matchesSubject;
             });
+
             renderTable(filtered);
         }
 
-        function populateJobFilter() {
-            const jobs = [...new Set(employees.map(e => e.job))].filter(Boolean);
-            const select = document.getElementById('jobFilter');
-            const currentVal = select.value;
-            select.innerHTML = '<option value="">جميع الوظائف</option>';
-            jobs.forEach(job => { select.innerHTML += `<option value="${job}">${job}</option>`; });
-            select.value = currentVal;
-        }
-
-        function exportToExcel(onlyFiltered = false) {
-            if (typeof XLSX === 'undefined') {
-                alert('جاري تحميل مكتبة التصدير، حاول مرة أخرى...');
-                return;
-            }
-            const dataToExport = onlyFiltered ? filteredEmployees : employees;
-            if (dataToExport.length === 0) {
-                alert('لا توجد بيانات لتصديرها!');
-                return;
-            }
-
-            const excelData = dataToExport.map((emp) => {
-                const nidInfo = extractAgeAndGenderFromNID(emp.nationalId);
-                return {
-                    "كود المعلم/الموظف": emp.id,
-                    "الاسم الكامل": emp.name,
-                    "الرقم القومي": emp.nationalId || "",
-                    "السن": nidInfo.age,
-                    "النوع": nidInfo.gender,
-                    "الوظيفة الحالية": emp.job,
-                    "تاريخ شغل الوظيفة الحالية": emp.currentJobDate || "",
-                    "المادة / التخصص": emp.subject || "بدون",
-                    "رقم التليفون": emp.phone || "",
-                    "العنوان": emp.address || "",
-                    "المؤهل الدراسي": emp.qualification || "",
-                    "تاريخ التعيين الأول": emp.hireDate || "",
-                    "حالة الكادر": emp.covered ? "مشمول" : "غير مشمول"
-                };
-            });
-
-            const worksheet = XLSX.utils.json_to_sheet(excelData);
-            worksheet['!dir'] = "rtl";
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, onlyFiltered ? "نتائج البحث" : "جميع الموظفين");
-            XLSX.writeFile(workbook, onlyFiltered ? "نتائج_بحث_الموظفين.xlsx" : "سجل_بيانات_الموظفين_المكامل.xlsx");
-        }
-
-        function showAddModal() {
-            document.getElementById('editIndex').value = "-1";
-            document.getElementById('modalTitle').textContent = "إضافة موظف جديد";
-            document.getElementById('employeeForm').reset();
-            document.getElementById('employeeModal').style.display = 'block';
-        }
-
-        function editEmployee(id) {
-            const emp = employees.find(e => e.id === id);
-            if (!emp) return;
-
-            document.getElementById('editIndex').value = id;
-            document.getElementById('modalTitle').textContent = `تعديل بيانات المعلم (كود: ${emp.id})`;
-            document.getElementById('empCode').value = emp.id;
-            document.getElementById('nationalId').value = emp.nationalId || '';
-            document.getElementById('fullName').value = emp.name;
-            document.getElementById('jobTitle').value = emp.job;
-            document.getElementById('currentJobDate').value = emp.currentJobDate || '';
-            document.getElementById('subject').value = emp.subject || '';
-            document.getElementById('phone').value = emp.phone || '';
-            document.getElementById('address').value = emp.address || '';
-            document.getElementById('qualification').value = emp.qualification || '';
-            document.getElementById('hireDate').value = emp.hireDate || '';
-            document.getElementById('covered').checked = emp.covered;
-
-            calculateNationalIdData();
-            document.getElementById('employeeModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('employeeModal').style.display = 'none';
-            document.getElementById('employeeForm').reset();
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            const editId = parseInt(document.getElementById('editIndex').value);
-            const customCode = parseInt(document.getElementById('empCode').value);
-
-            if (editId !== -1) {
-                if (customCode !== editId && employees.some(emp => emp.id === customCode)) {
-                    alert('الكود الجديد مُستخدم بالفعل لموظف آخر!');
-                    return;
-                }
-            } else {
-                if (employees.some(emp => emp.id === customCode)) {
-                    alert('هذا الكود مستخدم بالفعل! يرجى اختيار كود جديد.');
-                    return;
-                }
-            }
-
-            const updatedData = {
-                id: customCode,
-                nationalId: document.getElementById('nationalId').value,
-                name: document.getElementById('fullName').value,
-                job: document.getElementById('jobTitle').value,
-                currentJobDate: document.getElementById('currentJobDate').value,
-                subject: document.getElementById('subject').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
-                qualification: document.getElementById('qualification').value,
-                hireDate: document.getElementById('hireDate').value,
-                covered: document.getElementById('covered').checked
-            };
-
-            if (editId !== -1) {
-                const idx = employees.findIndex(e => e.id === editId);
-                if (idx !== -1) employees[idx] = updatedData;
-            } else {
-                employees.push(updatedData);
-            }
-
-            saveData();
-            closeModal();
-            updateDashboard();
-            filterEmployees();
-            populateJobFilter();
-            alert(editId !== -1 ? 'تم حفظ التعديلات بنجاح!' : 'تمت إضافة البيانات بنجاح!');
-        }
-
-        function deleteEmployee(id) {
-            if (confirm('هل أنت متأكد من رغبتك في حذف هذا الموظف نهائياً؟')) {
-                employees = employees.filter(e => e.id !== id);
-                saveData();
-                updateDashboard();
-                populateJobFilter();
-                filterEmployees();
-            }
-        }
-
-        function resetToDefaultData() {
-            if (confirm('هل أنت متأكد من استعادة البيانات الافتراضية للـ 71 معلماً وموظفاً؟')) {
-                employees = [...initialEmployees];
-                saveData();
-                updateDashboard();
-                filterEmployees();
-                populateJobFilter();
-                alert('تمت استعادة البيانات الأصلية بالكامل بنجاح.');
-            }
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('employeeModal');
-            if (event.target == modal) closeModal();
-        }
-
-        window.onload = function() {
-            updateDashboard();
-            filterEmployees();
-            populateJobFilter();
+        // تشغيل التهيئة عند تحميل الصفحة
+        window.onload = () => {
+            initSubjectFilter();
+            renderTable(staffData);
         };
     </script>
 </body>
